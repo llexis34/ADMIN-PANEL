@@ -1,0 +1,602 @@
+<!-- membership_page.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+  <link rel="stylesheet" href="membership_page.css" />
+
+  <link rel="shortcut icon" href="images/limcoma logoo.png" type="image/x-icon" />
+  <title>Membership Application | LIMCOMA</title>
+</head>
+
+<body>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="container d-flex align-items-center justify-content-between py-2">
+      <div class="brand">
+        <img src="images/limcoma logoo.png" alt="LIMCOMA Logo" />
+        LIMCOMA COOP
+      </div>
+
+      <div class="d-flex align-items-center">
+        <!-- ✅ HOME REMOVED -->
+        <a href="membership_page.html" class="nav-link active">Membership</a>
+        <button id="logoutBtn" class="btn btn-logout ml-2">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <main class="page">
+    <div class="container">
+
+      <!-- Header strip similar to your paper form -->
+      <div class="form-header">
+        <div class="header-left">
+          <div class="header-title">MEMBERSHIP APPLICATION FORM</div>
+          <div class="header-sub">LIMCOMA MULTI-PURPOSE COOPERATIVE</div>
+        </div>
+
+        <div class="header-right">
+          <div class="header-code">
+            <div class="code-label">CODE NO.</div>
+            <input class="code-input" name="code_no" type="text" placeholder="(office use)" />
+          </div>
+          <div class="header-badge">
+            <span class="badge-pill"><i class="fas fa-file-alt"></i> Application</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <!-- ✅ BACK BUTTON REMOVED -->
+
+        <div class="toolbar-right">
+          <!-- ✅ NEW: CHECKLIST BUTTON -->
+          <button type="button" class="btn btn-print" data-toggle="modal" data-target="#checklistModal">
+            <i class="fas fa-clipboard-check"></i> Checklist Requirements
+          </button>
+
+          <!-- ✅ SAVE BUTTON REMOVED -->
+          <button onclick="window.print()" class="btn btn-print">
+            <i class="fas fa-print"></i> Print
+          </button>
+        </div>
+      </div>
+
+      <!-- ✅ ADDED: FORM WRAPPER (no layout change) -->
+      <form id="membershipForm" autocomplete="on" novalidate>
+        <!-- Paper-like form card -->
+        <div class="paper">
+
+          <!-- TOP STRIP inside paper: application type + code + 2x2 picture -->
+          <div class="paper-top">
+            <div class="paper-cell">
+              <div class="cell-label">Application Type</div>
+              <div class="checks">
+                <label class="chk">
+                  <input type="radio" name="application_type" value="Associate" required />
+                  Associate
+                </label>
+                <label class="chk">
+                  <input type="radio" name="application_type" value="Regular" required />
+                  Regular
+                </label>
+                <label class="chk">
+                  <input type="radio" name="application_type" value="Transfer to Regular" required />
+                  Transfer to Regular
+                </label>
+              </div>
+            </div>
+
+            <div class="paper-cell">
+              <div class="cell-label">Code No.</div>
+              <input class="field" name="code_no_inside" type="text" placeholder="(office use)" />
+              <div class="mini-note">Same as header (for print style).</div>
+            </div>
+
+            <div class="paper-cell photo-cell">
+              <div class="photo-box">
+                <div class="photo-title">RECENT<br/>2x2 picture</div>
+                <img id="photoPreview" alt="2x2 Preview" />
+                <input id="photoInput" name="photo" class="photo-input" type="file" accept="image/*" required />
+                <div class="photo-hint">Upload photo</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- NAME ROW -->
+          <div class="grid-3">
+            <div class="box">
+              <div class="cell-label">Last Name</div>
+              <input class="field" name="last_name" type="text" placeholder="Last Name" required />
+            </div>
+            <div class="box">
+              <div class="cell-label">First Name</div>
+              <input class="field" name="first_name" type="text" placeholder="First Name" required />
+            </div>
+            <div class="box">
+              <div class="cell-label">Middle Name</div>
+              <input class="field" name="middle_name" type="text" placeholder="Middle Name" />
+            </div>
+          </div>
+
+          <!-- COMPLETE ADDRESS + GENDER -->
+          <div class="grid-2">
+            <div class="box">
+              <div class="cell-label">Tirahan (Complete Mailing Address)</div>
+              <input class="field" name="home_address" type="text" placeholder="House No., Street, Barangay, City, Province, Zip Code" required />
+            </div>
+            <div class="box">
+              <div class="cell-label">Kasarian (Gender)</div>
+              <div class="checks">
+                <label class="chk"><input type="radio" name="gender" value="Male" required /> Male</label>
+                <label class="chk"><input type="radio" name="gender" value="Female" required /> Female</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- RELIGION / BIRTHDATE / AGE / DEPENDENTS / CIVIL STATUS -->
+          <div class="grid-5">
+            <div class="box">
+              <div class="cell-label">Relihiyon (Religion)</div>
+              <input class="field" name="religion" type="text" placeholder="Religion" required />
+            </div>
+            <div class="box">
+              <div class="cell-label">Kapanganakan (Birthdate)</div>
+              <input class="field" name="birthdate" type="date" required />
+            </div>
+            <div class="box">
+              <div class="cell-label">Edad (Age)</div>
+              <input class="field" name="age" type="number" min="1" placeholder="0" required />
+            </div>
+            <div class="box">
+              <div class="cell-label">Bilang ng dependents</div>
+              <input class="field" name="dependents" type="number" min="0" placeholder="0" required />
+            </div>
+            <div class="box">
+              <div class="cell-label">Katayuang Sibil (Civil Status)</div>
+              <div class="checks small">
+                <label class="chk"><input type="radio" name="civil_status" value="Single" required /> Single</label>
+                <label class="chk"><input type="radio" name="civil_status" value="Married" required /> Married</label>
+                <label class="chk"><input type="radio" name="civil_status" value="Widower" required /> Widower</label>
+                <label class="chk"><input type="radio" name="civil_status" value="Separated" required /> Separated</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- EDUCATION / LIVELIHOOD / GROSS MONTHLY INCOME -->
+          <div class="grid-3">
+            <div class="box">
+              <div class="cell-label">Educational Attainment</div>
+              <input class="field" name="education" type="text" placeholder="Educational Attainment" required />
+            </div>
+            <div class="box">
+              <div class="cell-label">Hanapbuhay (Pinagkakakitaan)</div>
+              <input class="field" name="livelihood" type="text" placeholder="Work / Source of income" required />
+            </div>
+            <div class="box">
+              <div class="cell-label">Halaga ng buwanang kita (Gross monthly income)</div>
+              <input class="field" name="gross_monthly_income" type="number" min="0" placeholder="0" required />
+            </div>
+          </div>
+
+          <!-- TELEPHONE / MOBILE / EMAIL / TIN -->
+          <div class="grid-4">
+            <div class="box">
+              <div class="cell-label">Telepono</div>
+              <input class="field" name="telephone" type="text" placeholder="Telephone" />
+            </div>
+            <div class="box">
+              <div class="cell-label">Mobile No.</div>
+              <input class="field" name="mobile" type="text" placeholder="+63 9XX XXX XXXX" required />
+            </div>
+            <div class="box">
+              <div class="cell-label">Email Address</div>
+              <input class="field" id="autoEmail" name="email" type="email" placeholder="you@email.com" required />
+            </div>
+            <div class="box">
+              <div class="cell-label">TIN</div>
+              <input class="field" name="tin" type="text" placeholder="000-000-000-000" required />
+            </div>
+          </div>
+
+          <!-- WORK ADDRESS -->
+          <div class="grid-1">
+            <div class="box">
+              <div class="cell-label">Lugar ng Hanapbuhay (Complete Mailing Address)</div>
+              <input class="field" name="work_address" type="text" placeholder="House No., Street, Barangay, City, Province, Zip Code" required />
+            </div>
+          </div>
+
+          <!-- OFW -->
+          <div class="grid-3">
+            <div class="box">
+              <div class="cell-label">Kung OFW, Bansa (Country of origin)</div>
+              <input class="field" name="ofw_country" type="text" placeholder="Country" />
+            </div>
+            <div class="box">
+              <div class="cell-label">Trabaho (Work abroad)</div>
+              <input class="field" name="ofw_work" type="text" placeholder="Work abroad" />
+            </div>
+            <div class="box">
+              <div class="cell-label">Bilang ng Taon ng Pagtratrabaho (No. of years working abroad)</div>
+              <input class="field" name="ofw_years" type="number" min="0" placeholder="0" />
+            </div>
+          </div>
+
+          <!-- SPOUSE + COMPANY -->
+          <div class="grid-3">
+            <div class="box">
+              <div class="cell-label">Pangalan ng asawa (Spouse name)</div>
+              <input class="field" name="spouse_name" type="text" placeholder="Spouse name" />
+            </div>
+            <div class="box">
+              <div class="cell-label">Hanapbuhay (Occupation)</div>
+              <input class="field" name="spouse_occupation" type="text" placeholder="Occupation" />
+            </div>
+            <div class="box">
+              <div class="cell-label">Pangalan ng pinagtatrabahuhan (Name of company)</div>
+              <input class="field" name="spouse_company" type="text" placeholder="Company name" />
+            </div>
+          </div>
+
+          <!-- PARENTS -->
+          <div class="grid-4">
+            <div class="box">
+              <div class="cell-label">Pangalan ng Ama (Father’s Name)</div>
+              <input class="field" name="father_name" type="text" placeholder="Father's name" />
+            </div>
+            <div class="box">
+              <div class="cell-label">Hanapbuhay (Occupation)</div>
+              <input class="field" name="father_occupation" type="text" placeholder="Occupation" />
+            </div>
+            <div class="box">
+              <div class="cell-label">Pangalan ng Ina (Mother’s Name)</div>
+              <input class="field" name="mother_name" type="text" placeholder="Mother's name" />
+            </div>
+            <div class="box">
+              <div class="cell-label">Hanapbuhay (Occupation)</div>
+              <input class="field" name="mother_occupation" type="text" placeholder="Occupation" />
+            </div>
+          </div>
+
+          <!-- BENEFICIARIES -->
+          <div class="section-title">Mga BENEFICIARY(S) (kasama ang asawa kung meron)</div>
+
+          <div class="benef-wrap">
+            <div class="benef-head">
+              <div>Pangalan</div>
+              <div>Relasyon</div>
+              <div>% Allocation</div>
+              <div>Contact Number (kung meron)</div>
+            </div>
+
+            <!-- 4 rows -->
+            <div class="benef-row">
+              <input class="field" name="benef_name_1" type="text" placeholder="Name" />
+              <input class="field" name="benef_relation_1" type="text" placeholder="Relation" />
+              <input class="field" name="benef_alloc_1" type="number" min="0" max="100" placeholder="%" />
+              <input class="field" name="benef_contact_1" type="text" placeholder="Contact No." />
+            </div>
+            <div class="benef-row">
+              <input class="field" name="benef_name_2" type="text" placeholder="Name" />
+              <input class="field" name="benef_relation_2" type="text" placeholder="Relation" />
+              <input class="field" name="benef_alloc_2" type="number" min="0" max="100" placeholder="%" />
+              <input class="field" name="benef_contact_2" type="text" placeholder="Contact No." />
+            </div>
+            <div class="benef-row">
+              <input class="field" name="benef_name_3" type="text" placeholder="Name" />
+              <input class="field" name="benef_relation_3" type="text" placeholder="Relation" />
+              <input class="field" name="benef_alloc_3" type="number" min="0" max="100" placeholder="%" />
+              <input class="field" name="benef_contact_3" type="text" placeholder="Contact No." />
+            </div>
+            <div class="benef-row">
+              <input class="field" name="benef_name_4" type="text" placeholder="Name" />
+              <input class="field" name="benef_relation_4" type="text" placeholder="Relation" />
+              <input class="field" name="benef_alloc_4" type="number" min="0" max="100" placeholder="%" />
+              <input class="field" name="benef_contact_4" type="text" placeholder="Contact No." />
+            </div>
+          </div>
+
+          <div class="grid-1">
+            <div class="box">
+              <div class="mini-paragraph">
+                Sa kaso ng kamatayan, ang mga nabanggit na benepisyaryo ang tatanggap ng anumang benepisyo na dapat kong makuha bilang isang miyembro
+                ng kooperatiba batay sa porsyento ng alokasyon na nasaad dito. Gayundin, ang aking tagapagmana na si _____________ ay papayagang
+                makipagtransaksyon sa kooperatiba, bumili ng mga produkto nito, habang hinihintay na maaprubahan ang kanyang aplikasyon ng pagiging miyembro.
+              </div>
+            </div>
+          </div>
+
+          <!-- PRODUCTS -->
+          <div class="section-title">Mga Produkto / Serbisyo</div>
+
+          <div class="grid-1">
+            <div class="box">
+              <div class="cell-label">Alin sa mga produkto ng LIMCOMA ang nais mong i-avail?</div>
+
+              <div class="product-row">
+                <label class="chk"><input type="checkbox" name="avail_feeds" /> Feeds</label>
+
+                <div class="inline-q">
+                  <span class="q-label">Kasalukuyan bang gumagamit ng feeds?</span>
+                  <label class="chk"><input type="radio" name="using_feeds_now" value="Oo" /> Oo</label>
+                  <label class="chk"><input type="radio" name="using_feeds_now" value="Hindi" /> Hindi</label>
+
+                  <span class="q-label brand">Kung ang sagot ay Oo, anong brand?</span>
+                  <input class="field small-field" name="feeds_brand" type="text" placeholder="Brand" />
+                </div>
+
+                <label class="chk"><input type="checkbox" name="avail_loans" /> Loans</label>
+                <label class="chk"><input type="checkbox" name="avail_savings" /> Savings</label>
+                <label class="chk"><input type="checkbox" name="avail_time_deposit" /> Time Deposit</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- FEEDS DETAILS -->
+          <div class="grid-3">
+            <div class="box">
+              <div class="cell-label">Kung feeds ang pinili, punan ang mga sumusunod:</div>
+              <div class="subtle">Bilang ng alagang hayop:</div>
+            </div>
+
+            <div class="box">
+              <div class="cell-label">Baboy</div>
+              <div class="mini-grid">
+                <div class="mini-item">
+                  <span>Sow:</span>
+                  <input class="field mini-field" name="baboy_sow" type="number" min="0" placeholder="0" />
+                </div>
+                <div class="mini-item">
+                  <span>Piglet:</span>
+                  <input class="field mini-field" name="baboy_piglet" type="number" min="0" placeholder="0" />
+                </div>
+                <div class="mini-item">
+                  <span>Boar:</span>
+                  <input class="field mini-field" name="baboy_boar" type="number" min="0" placeholder="0" />
+                </div>
+                <div class="mini-item">
+                  <span>Grower:</span>
+                  <input class="field mini-field" name="baboy_grower" type="number" min="0" placeholder="0" />
+                </div>
+              </div>
+            </div>
+
+            <div class="box">
+              <div class="cell-label">Manok</div>
+              <div class="mini-grid">
+                <div class="mini-item">
+                  <span>Patilugin:</span>
+                  <input class="field mini-field" name="manok_patilugin" type="number" min="0" placeholder="0" />
+                </div>
+                <div class="mini-item">
+                  <span>Broiler:</span>
+                  <input class="field mini-field" name="manok_broiler" type="number" min="0" placeholder="0" />
+                </div>
+                <div class="mini-item full">
+                  <span>Iba pang alaga:</span>
+                  <input class="field mini-field" name="iba_pang_alaga" type="text" placeholder="(specify)" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- DECLARATION + SIGNATURE -->
+          <div class="declaration">
+            <div class="decl-title">DEKLARASYON</div>
+            <p>
+              Pinatutunayan ko na lahat ng mga impormasyon sa dokumentong ito ay totoo. Batid ko na anumang pagsisinungaling o pagkakamali ay maaaring
+              batayan sa pagkawalang-bisa, pagkansela ng aking aplikasyon o pagkatiwalag sa pagiging kasapi at handa kong tanggapin ang anumang kaparusahan
+              naaayon sa batas ng Limcoma Multi-Purpose Cooperative.
+            </p>
+
+            <div class="sig-grid">
+              <div class="sig-box">
+                <div class="cell-label">Lagda (Signature)</div>
+                <input class="field" name="signature" type="text" placeholder="Type full name (signature)" required />
+              </div>
+              <div class="sig-box">
+                <div class="cell-label">Petsa (Date)</div>
+                <input class="field" name="signature_date" type="date" required />
+              </div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <!-- ✅ UPDATED: JS controls validation + modal opening -->
+            <button id="submitBtn" type="button" class="btn btn-submit">
+              <i class="fas fa-paper-plane"></i> Submit Application
+            </button>
+
+            <div id="submitMsg" class="msg ok">✅ Submitted. Connect backend/database to store officially.</div>
+          </div>
+        </div>
+      </form>
+
+      <footer class="text-center footer">
+        © LIMCOMA MULTI-PURPOSE COOPERATIVE
+      </footer>
+
+    </div>
+  </main>
+
+  <!-- ✅ NEW: INCOMPLETE FORM MODAL -->
+  <div class="modal fade" id="incompleteModal" tabindex="-1" role="dialog" aria-labelledby="incompleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+      <div class="modal-content" style="border-radius:16px; overflow:hidden; color:#000000;">
+        <div class="modal-header" style="background:#b91c1c; color:#fff;">
+          <h5 class="modal-title font-weight-bold" id="incompleteModalLabel">
+            <i class="fas fa-exclamation-triangle"></i> Incomplete Form
+          </h5>
+          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" style="opacity:1;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body" style="background:#fff;">
+          <div style="font-weight:800; margin-bottom:10px;">
+            Please complete the required fields below before submitting:
+          </div>
+
+          <ul id="missingFieldsList" style="margin:0; padding-left:18px;"></ul>
+
+          <div class="small text-muted mt-3">
+            Tip: Required fields are validated automatically when you click Submit.
+          </div>
+        </div>
+
+        <div class="modal-footer" style="background:#fff;">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" style="border-radius:999px; font-weight:800; color:white; background:#000000;">
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ SUBMIT CONFIRMATION MODAL -->
+  <div class="modal fade" id="confirmSubmitModal" tabindex="-1" role="dialog" aria-labelledby="confirmSubmitModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content" style="border-radius:16px; overflow:hidden; color:#000000;">
+        <div class="modal-header" style="background:#15355a; color:#fff;">
+          <h5 class="modal-title font-weight-bold" id="confirmSubmitModalLabel">
+            <i class="fas fa-check-circle"></i> Confirm Your Application Details
+          </h5>
+          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" style="opacity:1;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body" style="background:#f6f8f7;">
+          <div class="p-3 bg-white" style="border:1px solid rgba(0,0,0,.08); border-radius:14px;">
+            <div class="font-weight-bold mb-2" style="color:#15355a;">
+              Review before submitting:
+            </div>
+
+            <!-- JS will fill this -->
+            <div id="confirmDetails" style="max-height:55vh; overflow:auto;"></div>
+          </div>
+
+          <div class="small text-muted mt-3">
+            Note: Please double-check your information. Click <strong>Confirm Submit</strong> to finalize.
+          </div>
+        </div>
+
+        <div class="modal-footer" style="background:#fff;">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" style="border-radius:999px; font-weight:800; color:white; background:#000000;">
+            Back / Edit
+          </button>
+
+          <button type="button" id="confirmSubmitBtn" class="btn btn-primary" style="border-radius:999px; font-weight:900; background:#15355a; border:none;">
+            <i class="fas fa-paper-plane"></i> Confirm Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ CHECKLIST MODAL -->
+  <div class="modal fade" id="checklistModal" tabindex="-1" role="dialog" aria-labelledby="checklistModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content" style="border-radius:16px; overflow:hidden; color:#000000;">
+        <div class="modal-header" style="background:#15355a; color:#fff;">
+          <h5 class="modal-title font-weight-bold" id="checklistModalLabel">
+            <i class="fas fa-clipboard-check"></i> Checklist of Requirements
+          </h5>
+          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close" style="opacity:1;">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body" style="background:#f6f8f7;">
+          <!-- ASSOCIATE -->
+          <div class="p-3 mb-3 bg-white" style="border:1px solid rgba(0,0,0,.08); border-radius:14px;">
+            <div class="font-weight-bold mb-2" style="color:#1b4332;">
+              CHECKLIST OF REQUIREMENTS FOR ASSOCIATE MEMBERSHIP (INDIVIDUAL)
+            </div>
+
+            <div class="custom-control custom-checkbox mb-2">
+              <input type="checkbox" class="custom-control-input" id="a1">
+              <label class="custom-control-label" for="a1">LIMCOMA Membership Application and Subscription Agreement Form</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-2">
+              <input type="checkbox" class="custom-control-input" id="a2">
+              <label class="custom-control-label" for="a2">Two (2x2) colored ID photo (recent shot)</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-2">
+              <input type="checkbox" class="custom-control-input" id="a3">
+              <label class="custom-control-label" for="a3">Photocopy of any government issued ID</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+              <input type="checkbox" class="custom-control-input" id="a4">
+              <label class="custom-control-label" for="a4">Birth or marriage certificate from PSA</label>
+            </div>
+
+            <div class="mt-2" style="font-weight:700; color:#000000;">
+              <div>Minimum paid-up share capital: <strong>P 1,000.00</strong></div>
+              <div>One-time membership fee: <strong>P 250.00</strong></div>
+              <div>ID fee: <strong>P 100.00</strong></div>
+              <div>Compulsory savings: <strong>P 150.00</strong></div>
+            </div>
+          </div>
+
+          <!-- REGULAR -->
+          <div class="p-3 bg-white" style="border:1px solid rgba(0,0,0,.08); border-radius:14px;">
+            <div class="font-weight-bold mb-2" style="color:#1b4332;">
+              CHECKLIST OF REQUIREMENTS FOR REGULAR MEMBERSHIP (INDIVIDUAL)
+            </div>
+
+            <div class="custom-control custom-checkbox mb-2">
+              <input type="checkbox" class="custom-control-input" id="r1">
+              <label class="custom-control-label" for="r1">LIMCOMA Membership Application and Subscription Agreement Form</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-2">
+              <input type="checkbox" class="custom-control-input" id="r2">
+              <label class="custom-control-label" for="r2">Two (2x2) colored ID photo (recent shot)</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-2">
+              <input type="checkbox" class="custom-control-input" id="r3">
+              <label class="custom-control-label" for="r3">Photocopy of any government issued ID</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-2">
+              <input type="checkbox" class="custom-control-input" id="r4">
+              <label class="custom-control-label" for="r4">Minimum paid-up share capital: <strong>P 10,000.00</strong></label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="r5">
+              <label class="custom-control-label" for="r5">ID Fee: <strong>P 100.00</strong></label>
+            </div>
+          </div>
+
+          <div class="small text-muted mt-3">
+            Note: The checkboxes here are for your reference only.
+          </div>
+        </div>
+
+        <div class="modal-footer" style="background:#fff;">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" style="border-radius:999px; font-weight:800; color:white; background:#000000;">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ REQUIRED FOR BOOTSTRAP MODAL (JS) -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script src="membership_page.js"></script>
+</body>
+</html>

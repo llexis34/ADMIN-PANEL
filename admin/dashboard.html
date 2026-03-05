@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | LIMCOMA Admin</title>
+  <link rel="shortcut icon" href="../images/limcoma logoo.png" type="image/x-icon" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+
+<body>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-brand">
+      <img src="../images/limcoma logoo.png" alt="Logo" />
+      LIMCOMA Admin Panel
+    </div>
+    <div class="topbar-right">
+      <span id="adminName">Admin</span>
+      <button class="btn-logout" onclick="adminLogout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-section">Main</div>
+    <a href="dashboard.html" class="active"><span class="ico">&#9632;</span> Dashboard</a>
+    <a href="applications.html"><span class="ico">&#128196;</span> Applications</a>
+    <a href="users.html"><span class="ico">&#128100;</span> Users</a>
+    <div class="sidebar-section admin-only" style="display:none;">Admin</div>
+    <a href="subadmins.html" class="admin-only" style="display:none;"><span class="ico">&#128272;</span> Admin
+      Accounts</a>
+    <div class="sidebar-section">Site</div>
+    <a href="../index.html" target="_blank"><span class="ico">&#127760;</span> Main Site</a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="page-title">Dashboard</div>
+
+    <!-- Stats -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-box blue">
+        <div class="stat-num" id="s-users">—</div>
+        <div class="stat-label">Registered Users</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" id="s-total">—</div>
+        <div class="stat-label">Total Applications</div>
+      </div>
+      <div class="stat-box orange">
+        <div class="stat-num" id="s-incomplete">—</div>
+        <div class="stat-label">Incomplete</div>
+      </div>
+      <div class="stat-box green">
+        <div class="stat-num" id="s-approved">—</div>
+        <div class="stat-label">Approved / Active</div>
+      </div>
+    </div>
+
+    <!-- Recent Applications -->
+    <div class="card">
+      <div class="card-title">Recent Applications</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Submitted</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="recentTbody">
+            <tr>
+              <td colspan="6" style="text-align:center;padding:20px;color:#888;">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:12px;">
+        <a href="applications.html" class="btn btn-primary btn-sm">View All Applications</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (async function () {
+      // Auth check
+      const me = await (await fetch("api/admin_me.php", { credentials: "include" })).json();
+      if (!me.ok) { window.location.href = "login.html"; return; }
+
+      document.getElementById("adminName").textContent = me.username + " (" + me.role + ")";
+
+      // Show admin-only elements
+      if (me.role === "admin") {
+        document.querySelectorAll(".admin-only").forEach(el => el.style.display = "");
+      }
+
+      // Load dashboard data
+      const r = await fetch("api/admin_dashboard.php", { credentials: "include" });
+      const data = await r.json();
+
+      if (!data.ok) return;
+
+      document.getElementById("s-incomplete").textContent = data.stats.incomplete;
+      document.getElementById("s-approved").textContent = data.stats.approved;
+
+      const tbody = document.getElementById("recentTbody");
+      if (!data.recent.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#888;">No applications yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = data.recent.map(row => `
+      <tr>
+        <td>${row.id}</td>
+        <td>${esc(row.first_name || "")} ${esc(row.last_name || "")}</td>
+        <td>${esc(row.email || "")}</td>
+        <td><span class="badge badge-${row.status.toLowerCase()}">${row.status}</span></td>
+        <td>${row.submitted_at ? row.submitted_at.slice(0, 10) : ""}</td>
+        <td><a href="applications.html?view=${row.id}" class="btn btn-primary btn-sm">View</a></td>
+      </tr>
+    `).join("");
+    })();
+
+    function esc(s) {
+      return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    async function adminLogout() {
+      if (!confirm("Logout?")) return;
+      await fetch("api/admin_logout.php", { method: "POST", credentials: "include" });
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+
+</html>

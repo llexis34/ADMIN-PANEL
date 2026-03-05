@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Bootstrap -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+  <!-- ✅ USE SAME DESIGN CSS -->
+  <link rel="stylesheet" href="signin.css" />
+
+  <link rel="shortcut icon" href="images/limcoma logoo.png" type="image/x-icon" />
+  <title>Membership Application | LIMCOMA</title>
+</head>
+
+<body>
+
+  <!-- ✅ PHOTO BACKGROUND (REPLACED VIDEO) -->
+  <div class="photo-bg" aria-hidden="true"></div>
+
+  <!-- ✅ SIMPLE TOPBAR -->
+  <div class="topbar">
+    <div class="container d-flex align-items-center justify-content-between py-2">
+      <div class="brand">
+        <img src="images/limcoma logoo.png" alt="LIMCOMA Logo">
+        LIMCOMA COOP
+      </div>
+
+      <div class="d-flex align-items-center">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="membership_page.html" class="nav-link">Membership</a>
+      </div>
+    </div>
+  </div>
+
+  <main class="page">
+    <div class="container">
+
+      <!-- ✅ PAGE HEADER STRIP -->
+      <div class="hero-strip">
+        <h1>Membership Application</h1>
+        <p>
+          Fill out the form below to apply for LIMCOMA membership. After submission, you will receive instructions for
+          the next steps.
+        </p>
+      </div>
+
+      <a class="back-link mb-3 d-inline-block" href="index.html">
+        <i class="fas fa-arrow-left"></i> Back to Homepage
+      </a>
+
+      <!-- ✅ ADD SIGN IN SHORTCUT -->
+      <div class="mb-3" style="color: rgba(255,255,255,0.92);">
+        Already applied / have an account?
+        <a href="signin.html" class="back-link" style="font-weight:800;">
+          Sign In <i class="fas fa-sign-in-alt"></i>
+        </a>
+      </div>
+
+      <div class="grid">
+
+        <!-- ✅ FORM CARD -->
+        <div class="card">
+          <div class="card-head">
+            <h2>Applicant Information</h2>
+            <small>Please provide accurate details.</small>
+          </div>
+
+          <div class="card-body">
+            <form id="membershipForm">
+
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label>First Name</label>
+                  <input type="text" class="form-control" name="firstName" required>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label>Last Name</label>
+                  <input type="text" class="form-control" name="lastName" required>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label>Email</label>
+                  <input type="email" class="form-control" name="email" required>
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label>Password</label>
+                  <input type="password" class="form-control" name="password" required minlength="8">
+                </div>
+              </div>
+
+              <div class="form-group col-md-6">
+                <label>Phone Number</label>
+                <input type="tel" class="form-control" name="phone" required>
+              </div>
+          </div>
+
+          <div class="form-group">
+            <label>Complete Address</label>
+            <input type="text" class="form-control" name="address" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label>Occupation</label>
+              <input type="text" class="form-control" name="occupation" required>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label>Membership Type</label>
+              <select class="custom-select" name="type" required>
+                <option value="">Select Type</option>
+                <option value="Regular Member">Regular Member</option>
+                <option value="Associate Member">Associate Member</option>
+                <option value="Transfer to Regular Member">Transfer to Regular Member</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Short Message / Reason for Joining</label>
+            <textarea class="form-control" name="message" placeholder="Tell us why you want to join LIMCOMA..."
+              required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-main">
+            Submit Membership Application
+          </button>
+
+          <div id="statusMsg" class="status">
+            ✅ Application submitted! We’ll contact you soon.
+          </div>
+
+          </form>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="text-center">
+      © LIMCOMA MULTI-PURPOSE COOPERATIVE
+    </footer>
+
+    </div>
+  </main>
+
+  <script>
+    // Connect this "Application" form to PHP + MySQL
+    document.getElementById("membershipForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const status = document.getElementById("statusMsg");
+      status.style.display = "none";
+
+      // Collect form fields (keeps your existing name="" attributes)
+      const fd = new FormData(this);
+
+      try {
+        const res = await fetch("api/auth_register.php", {
+          method: "POST",
+          credentials: "include", // Important for PHP session cookies
+          body: fd
+        });
+
+        const data = await res.json();
+
+        if (!data.ok) {
+          alert(data.error || "Registration failed.");
+          return;
+        }
+
+        status.style.display = "block";
+        this.reset();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        // OPTIONAL: redirect to signin page after successful signup
+        setTimeout(() => {
+          window.location.href = "signin.html";
+        }, 900);
+
+      } catch (err) {
+        alert("Server error. Please try again.");
+      }
+    });
+  </script>
+
+</body>
+
+</html>

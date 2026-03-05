@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="images/limcoma logoo.png" type="image/x-icon">
+    <title>LIMCOMA MULTI-PURPOSE COOPERATIVE</title>
+</head>
+
+<body>
+    <div class="bg-zoom-container"></div>
+    <canvas id="particle-canvas"></canvas>
+    <div class="grain-overlay"></div>
+    <div class="geometric-overlay"></div>
+
+    <header class="d-flex justify-content-center align-items-center text-white">
+        <div class="logo mr-4">
+            <img src="images/limcoma logoo.png" alt="Logo" class="logo-img" style="height:40px;">
+        </div>
+        <nav class="d-flex">
+            <a href="#" class="nav-link">Home</a>
+            <a href="about_us_page.html" class="nav-link">About Us</a>
+            <a href="#" class="nav-link">Products</a>
+            <a href="#loans" class="nav-link">Loans</a>
+            <a href="#about" class="nav-link">Membership</a>
+        </nav>
+    </header>
+
+    <main id="main-content">
+
+        <!-- HERO -->
+        <section class="hero-section section-reveal" data-reveal="fade-up">
+            <div class="hero-container">
+                <h1 id="typing-effect" class="reveal-child" data-reveal-child="fade-up">
+                    LIMCOMA MULTI-PURPOSE COOPERATIVE
+                </h1>
+
+                <p class="hero-description reveal-child" data-reveal-child="fade-up">
+                    “Providing Quality Animal Feeds, Accessible Financial Support,
+                    and a Strong Cooperative Community for Sustainable Growth.”
+                </p>
+
+                <div class="hero-buttons reveal-child" data-reveal-child="fade-up">
+                    <a href="signin.html" class="btn-primary-custom">Apply for Membership!</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ABOUT -->
+        <section id="about" class="about-section section-reveal" data-reveal="fade-left">
+            <div class="container about-wrap">
+                <div class="row align-items-center">
+
+                    <div class="col-lg-6 about-content reveal-on-scroll">
+                        <div class="about-move-box">
+                            <div class="about-kicker about-anim">ABOUT LIMCOMA</div>
+                            <h2 class="about-title about-title-reveal about-anim">
+                                A Farmer’s Dream Since 1970<br>
+                            </h2>
+                            <p class="about-text about-anim">
+                                LIMCOMA operates modern facilities, breeding farms, and satellite offices while providing high-quality feeds, accessible loan programs, scholarships, and community support initiatives. More than just a feedmill, LIMCOMA remains committed to uplifting farmers, strengthening communities, and turning the dream of a better life into reality for its members..
+                            </p>
+                            <ul class="about-list">
+                                <li class="about-anim"><i class="fas fa-check-circle"></i> Farmer-owned and operated cooperative</li>
+                                <li class="about-anim"><i class="fas fa-check-circle"></i> High-quality, affordable feed production</li>
+                                <li class="about-anim"><i class="fas fa-check-circle"></i> Low-interest agricultural loans</li>
+                            </ul>
+
+                            <a href="about_us_page.html" class="about-btn about-anim">Learn More About Us</a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 about-image-col reveal-on-scroll">
+                        <img src="images/painting.jpg" alt="About LIMCOMA" class="about-image">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRODUCTS -->
+        <section class="products-section section-reveal" data-reveal="zoom-in">
+            <div class="container text-center">
+                <div class="products-kicker reveal-child" data-reveal-child="fade-up">OUR PRODUCTS</div>
+                <h2 class="products-title reveal-child" data-reveal-child="fade-up">Premium Animal Feeds</h2>
+                <p class="products-subtitle reveal-child" data-reveal-child="fade-up">
+                    Scientifically formulated feeds to ensure the health and maximum growth of your livestock.
+                </p>
+
+                <div class="products-wrapper reveal-child" data-reveal-child="fade-up">
+
+                    <button class="product-arrow left" type="button" aria-label="Previous products">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+
+                    <div class="products-viewport">
+                        <div class="row product-cards product-track">
+
+                            <div class="col-md-4 product-slide">
+                                <div class="product-card">
+                                    <img src="images/cattle.jpg" class="product-img" alt="Cattle Feeds">
+                                    <div class="product-content">
+                                        <h5>Cattle Feeds</h5>
+                                        <p>Complete nutrition for cattle from calf to mature. Ensures rapid growth and health.</p>
+                                        <a href="#">View Products →</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 product-slide">
+                                <div class="product-card">
+                                    <img src="images/broiler.jpg" class="product-img" alt="Broiler Feeds">
+                                    <div class="product-content">
+                                        <h5>Premium Broiler Feeds</h5>
+                                        <p>Balanced diet for broilers and layers. Promotes healthy feathers.</p>
+                                        <a href="#">View Products →</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 product-slide">
+                                <div class="product-card">
+                                    <img src="images/aqua.jpg" class="product-img" alt="Fish Feeds">
+                                    <div class="product-content">
+                                        <h5>Fish Floater Feeds</h5>
+                                        <p>Specialized floating feeds for tilapia and milkfish. Maximizes yield.</p>
+                                        <a href="#">View Products →</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 product-slide">
+                                <div class="product-card">
+                                    <img src="images/cattle.jpg" class="product-img" alt="Hog Feeds">
+                                    <div class="product-content">
+                                        <h5>Hog Feeds</h5>
+                                        <p>Balanced feed mix for stronger growth, better digestion, and healthier hogs.</p>
+                                        <a href="#">View Products →</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 product-slide">
+                                <div class="product-card">
+                                    <img src="images/broiler.jpg" class="product-img" alt="Layer Feeds">
+                                    <div class="product-content">
+                                        <h5>Layer Feeds</h5>
+                                        <p>Formulated to support egg production, shell quality, and hen wellness.</p>
+                                        <a href="#">View Products →</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 product-slide">
+                                <div class="product-card">
+                                    <img src="images/aqua.jpg" class="product-img" alt="Starter Feeds">
+                                    <div class="product-content">
+                                        <h5>Starter Feeds</h5>
+                                        <p>High-protein starter feeds for young livestock to build strength early.</p>
+                                        <a href="#">View Products →</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <button class="product-arrow right" type="button" aria-label="Next products">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- ✅ LOANS -->
+        <section id="loans" class="financial-section section-reveal" data-reveal="fade-up">
+            <div class="container text-center">
+
+                <div class="fin-kicker reveal-child" data-reveal-child="fade-up">ABOUT LOANS</div>
+                <h2 class="fin-title reveal-child" data-reveal-child="fade-up">Explore LIMCOMA Loan Offers</h2>
+
+                <div class="loans-showcase reveal-child" data-reveal-child="fade-up">
+
+                    <div class="loans-panel">
+                        <div class="loans-panel-top">
+                            <div class="loans-panel-title">
+                                <h3 class="lp-title">Loan Categories</h3>
+                                <p class="lp-sub">
+                                    Filter and preview each loan type. This is for viewing only (no application form here).
+                                </p>
+                            </div>
+
+                            <!-- Filters -->
+                            <div class="loan-filters" aria-label="Loan category filters">
+                                <button class="loan-filter is-active" type="button" data-filter="all">
+                                    <i class="fa-solid fa-layer-group"></i> All
+                                </button>
+                                <button class="loan-filter" type="button" data-filter="business">
+                                    <i class="fa-solid fa-briefcase"></i> Business
+                                </button>
+                                <button class="loan-filter" type="button" data-filter="personal">
+                                    <i class="fa-solid fa-user"></i> Personal
+                                </button>
+                                <button class="loan-filter" type="button" data-filter="vehicle">
+                                    <i class="fa-solid fa-car-side"></i> Vehicle
+                                </button>
+                                <button class="loan-filter" type="button" data-filter="property">
+                                    <i class="fa-solid fa-house"></i> Property & Asset
+                                </button>
+                                <button class="loan-filter" type="button" data-filter="secured">
+                                    <i class="fa-solid fa-lock"></i> Secured / Special
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Grid -->
+                        <div class="loan-grid" aria-label="Loan products grid">
+
+                            <!-- BUSINESS -->
+                            <div class="loan-card" data-cat="business">
+                                <div class="loan-card-top">
+                                    <div class="loan-ico"><i class="fa-solid fa-briefcase"></i></div>
+                                    <span class="loan-tag">Business</span>
+                                </div>
+                                <h4 class="loan-name">Business Loan</h4>
+                                <p class="loan-desc">Capital support for expansion, inventory, and working funds.</p>
+                            </div>
+
+                            <div class="loan-card" data-cat="business">
+                                <div class="loan-card-top">
+                                    <div class="loan-ico"><i class="fa-solid fa-store"></i></div>
+                                    <span class="loan-tag">Business</span>
+                                </div>
+                                <h4 class="loan-name">Micro-Enterprise Loan</h4>
+                                <p class="loan-desc">Support for small vendors, sari-sari, and micro businesses.</p>
+                            </div>
+
+                            <div class="loan-card" data-cat="business">
+                                <div class="loan-card-top">
+                                    <div class="loan-ico"><i class="fa-solid fa-truck"></i></div>
+                                    <span class="loan-tag">Business</span>
+                                </div>
+                                <h4 class="loan-name">Business Vehicle Loan</h4>
+                                <p class="loan-desc">For delivery / operations vehicles supporting your enterprise.</p>
+                            </div>
+
+                            <div class="loan-card" data-cat="business">
+                                <div class="loan-card-top">
+                                    <div class="loan-ico"><i class="fa-solid fa-seedling"></i></div>
+                                    <span class="loan-tag">Business</span>
+                                </div>
+                                <h4 class="loan-name">Agricultural Loan</h4>
+                                <p class="loan-desc">For seeds, livestock, feeds, tools, and farm improvements.</p>
+                            </div>
+
+                            <!-- PERSONAL -->
+                            <div class="loan-card" data-cat="personal">
+                                <div class="loan-card-top">
+                                    <div class="loan-ico"><i class="fa-solid fa-user"></i></div>
+                                    <span class="loan-tag">Personal</span>
+                                </div>
+                                <h4 class="loan-name">Personal Loan</h4>
+                                <p class="loan-desc">Flexible support for personal needs and emergencies.</p>
+                            </div>
+
+                            <div class="loan-card" data-cat="personal">
+                                <div class="loan-card-top">
+                                    <div class="loan-ico"><i class="fa-solid fa-hand-holding-heart"></i></div>
+                                    <span class="loan-tag">Personal</span>
+                                </div>
+                                <h4 class="loan-name">Pensioner’s Loan</h4>
+                                <p class="loan-desc">Support designed for pensioner members.</p>
+                            </div>
+
+                            <div class="loan-card" data-cat="personal">
+                                <div class="loan-card-top">
+                                    <div class="loan-ico"><i class="fa-solid fa-bolt"></i></div>
+                                    <span class="loan-tag">Personal</span>
+                                </div>
+                                <h4 class="loan-name">Short-Term Character Loan</h4>
+                                <p class="loan-desc">Quick short-term support for urgent needs.</p>
+                            </div>
+
+                            <!-- VEHICLE -->
+                            <div class="loan-card" data-cat="vehicle">
+                                <div class="loan-card-top">
+                                    <div class="loan-ico"><i class="fa-solid fa-car-side"></i></div>
+                                    <span class="loan-tag">Vehicle</span>
+                                </div>
+                                <h4 class="loan-name">Personal Vehicle Loan</h4>
+                                <p class="loan-desc">For car purchase / upgrade support.</p>
+                            </div>
+
+                            <div class="loan-card" data-cat="vehicle">
+                                <div class="loan-card-top">
+                                    <div class="loan-ico"><i class="fa-solid fa-motorcycle"></i></div>
+                                    <span class="loan-tag">Vehicle</span>
+                                </div>
+                                <h4 class="loan-name">Motorcycle Loan</h4>
+                                <p class="loan-desc">For motorcycle purchase support.</p>
+                            </div>
+
+                            <!-- PROPERTY -->
+                            <div class="loan-card" data-cat="property">
+                                <div class="loan-card-top">
+                                    <div class="loan-ico"><i class="fa-solid fa-house"></i></div>
+                                    <span class="loan-tag">Property</span>
+                                </div>
+                                <h4 class="loan-name">Real Estate Loan</h4>
+                                <p class="loan-desc">Support for property purchase or development.</p>
+                            </div>
+
+                            <div class="loan-card" data-cat="property">
+                                <div class="loan-card-top">
+                                    <div class="loan-ico"><i class="fa-solid fa-tv"></i></div>
+                                    <span class="loan-tag">Property</span>
+                                </div>
+                                <h4 class="loan-name">Appliance / Gadget / Furniture</h4>
+                                <p class="loan-desc">For home essentials and important purchases.</p>
+                            </div>
+
+                            <div class="loan-card" data-cat="property">
+                                <div class="loan-card-top">
+                                    <div class="loan-ico"><i class="fa-solid fa-building"></i></div>
+                                    <span class="loan-tag">Property</span>
+                                </div>
+                                <h4 class="loan-name">Housing Loan</h4>
+                                <p class="loan-desc">Home purchase / renovation support options.</p>
+                            </div>
+
+                            <!-- SECURED -->
+                            <div class="loan-card" data-cat="secured">
+                                <div class="loan-card-top">
+                                    <div class="loan-ico"><i class="fa-solid fa-piggy-bank"></i></div>
+                                    <span class="loan-tag">Secured</span>
+                                </div>
+                                <h4 class="loan-name">Savings-Secured Loan</h4>
+                                <p class="loan-desc">Secure financing tied to savings.</p>
+                            </div>
+
+                            <div class="loan-card" data-cat="secured">
+                                <div class="loan-card-top">
+                                    <div class="loan-ico"><i class="fa-solid fa-scale-balanced"></i></div>
+                                    <span class="loan-tag">Secured</span>
+                                </div>
+                                <h4 class="loan-name">Debt-Consolidation Loan</h4>
+                                <p class="loan-desc">Combine debts into one repayment plan.</p>
+                            </div>
+
+                            <div class="loan-card" data-cat="secured">
+                                <div class="loan-card-top">
+                                    <div class="loan-ico"><i class="fa-solid fa-arrows-rotate"></i></div>
+                                    <span class="loan-tag">Secured</span>
+                                </div>
+                                <h4 class="loan-name">Back-to-Back Loan</h4>
+                                <p class="loan-desc">Special secured loan arrangement for members.</p>
+                            </div>
+
+                        </div>
+
+                        <div class="loans-panel-note">
+                            <i class="fa-solid fa-circle-info"></i>
+                            This section is a <b>view-only showcase</b>. For application, route this to your future form page.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fin-legacy" hidden>
+                    <!-- (kept as-is) -->
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center p-3 text-white">
+        <div class="d-flex justify-content-between align-items-center flex-wrap container">
+            <div class="footer-links mb-2">
+                <a href="#"><i class="fas fa-shield-alt"></i> Privacy Policy</a>
+                <span class="mx-2">|</span>
+                <a href="#"><i class="fas fa-file-contract"></i> Terms of Service</a>
+            </div>
+
+            <div class="social-links mb-2">
+                Follow us:
+                <a href="https://www.facebook.com/limcomacooperative" target="_blank" class="mx-2">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+            </div>
+
+            <div class="contact-links mb-2">
+                <a href="mailto:limcomamultipurposecooperative@gmail.com">
+                    <i class="fas fa-envelope"></i> limcomamultipurposecooperative@gmail.com
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Accounts | LIMCOMA Admin</title>
+  <link rel="shortcut icon" href="../images/limcoma logoo.png" type="image/x-icon" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <img src="../images/limcoma logoo.png" alt="Logo" />
+    LIMCOMA Admin Panel
+  </div>
+  <div class="topbar-right">
+    <span id="adminName">Admin</span>
+    <button class="btn-logout" onclick="adminLogout()">Logout</button>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-section">Main</div>
+  <a href="dashboard.html"><span class="ico">&#9632;</span> Dashboard</a>
+  <a href="applications.html"><span class="ico">&#128196;</span> Applications</a>
+  <a href="users.html"><span class="ico">&#128100;</span> Users</a>
+  <div class="sidebar-section">Admin</div>
+  <a href="subadmins.html" class="active"><span class="ico">&#128272;</span> Admin Accounts</a>
+  <div class="sidebar-section">Site</div>
+  <a href="../index.html" target="_blank"><span class="ico">&#127760;</span> Main Site</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="page-title">Admin Accounts</div>
+
+  <div class="toolbar no-print">
+    <button class="btn btn-primary" onclick="openCreate()">+ Add Admin/Sub-Admin</button>
+    <button class="btn btn-secondary" onclick="loadAdmins()">Refresh</button>
+  </div>
+
+  <div id="alertBox"></div>
+
+  <!-- Role Guide -->
+  <div class="card" style="margin-bottom:16px;background:#f0f6ff;border-left:4px solid #15355a;">
+    <div style="font-size:0.88rem;color:#15355a;">
+      <strong>Admin:</strong> Full access — manage users, sub-admins, delete accounts, all features.<br/>
+      <strong>Sub-Admin:</strong> Can view/edit applications, update statuses. Cannot manage admin accounts.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Last Login</th>
+            <th style="min-width:220px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="adminTbody">
+          <tr><td colspan="7" style="text-align:center;padding:20px;color:#888;">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ── CREATE MODAL ───────────────────────────────────────── -->
+<div class="modal-overlay" id="createModal">
+  <div class="modal-box" style="max-width:460px;">
+    <div class="modal-header">
+      <span>Add Admin Account</span>
+      <button class="modal-close" onclick="closeModal('createModal')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="cUsername" class="form-control" placeholder="e.g. jdelacruz" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="cEmail" class="form-control" placeholder="email@example.com" />
+      </div>
+      <div class="form-group">
+        <label>Password <span style="color:#888;font-weight:normal;">(min. 8 characters)</span></label>
+        <input type="password" id="cPassword" class="form-control" placeholder="Password" />
+      </div>
+      <div class="form-group">
+        <label>Role</label>
+        <select id="cRole" class="form-control">
+          <option value="sub_admin">Sub-Admin</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('createModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitCreate()">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── EDIT MODAL ─────────────────────────────────────────── -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal-box" style="max-width:460px;">
+    <div class="modal-header">
+      <span>Edit Admin Account</span>
+      <button class="modal-close" onclick="closeModal('editModal')">&#x2715;</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="eId" />
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="eUsername" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="eEmail" class="form-control" />
+      </div>
+      <div class="form-group">
+        <label>Role</label>
+        <select id="eRole" class="form-control">
+          <option value="sub_admin">Sub-Admin</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>New Password <span style="color:#888;font-weight:normal;">(leave blank to keep current)</span></label>
+        <input type="password" id="ePassword" class="form-control" placeholder="New password (optional)" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('editModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitEdit()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let myId = 0;
+
+  (async function init() {
+    const me = await (await fetch("api/admin_me.php", { credentials: "include" })).json();
+    if (!me.ok) { window.location.href = "login.html"; return; }
+
+    // Only full admin can access this page
+    if (me.role !== "admin") {
+      document.querySelector(".main").innerHTML = `<div class="alert alert-danger" style="margin-top:20px;">Access denied. This page is for full Admins only.</div>`;
+      return;
+    }
+
+    myId = me.id;
+    document.getElementById("adminName").textContent = me.username + " (admin)";
+    loadAdmins();
+  })();
+
+  async function loadAdmins() {
+    const r    = await fetch("api/admin_subadmins.php?action=list", { credentials: "include" });
+    const data = await r.json();
+    const tbody = document.getElementById("adminTbody");
+
+    if (!data.ok || !data.data.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:#888;">No admin accounts found.</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = data.data.map(a => `
+      <tr>
+        <td>${a.id}</td>
+        <td><strong>${esc(a.username)}</strong>${a.id == myId ? ' <span style="color:#16a34a;font-size:0.78rem;">(you)</span>' : ''}</td>
+        <td>${esc(a.email)}</td>
+        <td><span class="badge ${a.role === 'admin' ? 'badge-admin' : 'badge-sub'}">${a.role === 'admin' ? 'Admin' : 'Sub-Admin'}</span></td>
+        <td><span class="badge ${a.is_active ? 'badge-active' : 'badge-inactive'}">${a.is_active ? 'Active' : 'Inactive'}</span></td>
+        <td>${a.last_login ? a.last_login.slice(0,16) : '<span style="color:#bbb;">Never</span>'}</td>
+        <td>
+          <button class="btn btn-primary btn-sm" onclick="openEdit(${a.id},'${esc(a.username)}','${esc(a.email)}','${a.role}')">Edit</button>
+          ${a.id != myId ? `
+            <button class="btn btn-sm ${a.is_active ? 'btn-warning' : 'btn-success'}" onclick="toggleActive(${a.id}, ${a.is_active ? 0 : 1})">${a.is_active ? 'Disable' : 'Activate'}</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteAdmin(${a.id})">Delete</button>
+          ` : ""}
+        </td>
+      </tr>
+    `).join("");
+  }
+
+  function openCreate() {
+    document.getElementById("cUsername").value = "";
+    document.getElementById("cEmail").value    = "";
+    document.getElementById("cPassword").value = "";
+    document.getElementById("cRole").value     = "sub_admin";
+    openModal("createModal");
+  }
+
+  async function submitCreate() {
+    const body = {
+      username: document.getElementById("cUsername").value.trim(),
+      email:    document.getElementById("cEmail").value.trim(),
+      password: document.getElementById("cPassword").value,
+      role:     document.getElementById("cRole").value,
+    };
+
+    if (!body.username || !body.email || body.password.length < 8) {
+      showAlert("Username, email and password (8+ chars) are required.", "danger");
+      return;
+    }
+
+    const r    = await post("api/admin_subadmins.php?action=create", body);
+    const data = await r.json();
+
+    if (!data.ok) { showAlert("Error: " + (data.error || "Failed"), "danger"); return; }
+    closeModal("createModal");
+    showAlert("Admin account created.", "success");
+    loadAdmins();
+  }
+
+  function openEdit(id, username, email, role) {
+    document.getElementById("eId").value       = id;
+    document.getElementById("eUsername").value = username;
+    document.getElementById("eEmail").value    = email;
+    document.getElementById("eRole").value     = role;
+    document.getElementById("ePassword").value = "";
+    openModal("editModal");
+  }
+
+  async function submitEdit() {
+    const body = {
+      id:       parseInt(document.getElementById("eId").value),
+      username: document.getElementById("eUsername").value.trim(),
+      email:    document.getElementById("eEmail").value.trim(),
+      role:     document.getElementById("eRole").value,
+      password: document.getElementById("ePassword").value,
+    };
+
+    const r    = await post("api/admin_subadmins.php?action=edit", body);
+    const data = await r.json();
+
+    if (!data.ok) { showAlert("Error: " + (data.error || "Failed"), "danger"); return; }
+    closeModal("editModal");
+    showAlert("Account updated.", "success");
+    loadAdmins();
+  }
+
+  async function toggleActive(id, newState) {
+    if (!confirm((newState ? "Activate" : "Disable") + " this admin account?")) return;
+    const r    = await post("api/admin_subadmins.php?action=toggle_active", { id, is_active: newState });
+    const data = await r.json();
+    if (!data.ok) { showAlert("Error: " + (data.error || "Failed"), "danger"); return; }
+    showAlert("Account " + (newState ? "activated" : "disabled") + ".", "success");
+    loadAdmins();
+  }
+
+  async function deleteAdmin(id) {
+    if (!confirm("Delete this admin account permanently?")) return;
+    const r    = await post("api/admin_subadmins.php?action=delete", { id });
+    const data = await r.json();
+    if (!data.ok) { showAlert("Error: " + (data.error || "Failed"), "danger"); return; }
+    showAlert("Account deleted.", "success");
+    loadAdmins();
+  }
+
+  function openModal(id)  { document.getElementById(id).classList.add("open"); }
+  function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+
+  function post(url, body) {
+    return fetch(url, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+  }
+
+  function showAlert(msg, type) {
+    const box = document.getElementById("alertBox");
+    box.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+    setTimeout(() => box.innerHTML = "", 3500);
+  }
+
+  function esc(s) {
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
+  async function adminLogout() {
+    if (!confirm("Logout?")) return;
+    await fetch("api/admin_logout.php", { method: "POST", credentials: "include" });
+    window.location.href = "login.html";
+  }
+</script>
+</body>
+</html>

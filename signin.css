@@ -1,0 +1,452 @@
+:root{
+  /* ✅ REPLACED GREEN THEME -> FADED BLUE THEME (kept variable names so your HTML stays untouched) */
+  --green:#234163;          /* deep faded blue (primary) */
+  --green2:#5f8fb8;         /* soft blue (accent) */
+
+  /* ✅ background + surfaces tuned to blue-gray */
+  --cream:#f2f6fb;          /* cool light background */
+  --card:#ffffff;
+  --text:#0f172a;           /* slate text */
+  --muted:#64748b;          /* muted slate */
+
+  /* ✅ softer shadow to match blue theme */
+  --shadow: 0 18px 45px rgba(0, 0, 0, 0.524);
+
+  /* ✅ button effect helpers */
+  --btn-glow: 0 16px 35px rgba(95,143,184,0.28);
+  --btn-glow-strong: 0 20px 45px rgba(35,65,99,0.28);
+  --ring: 0 0 0 4px rgba(95,143,184,0.22);
+}
+
+*{box-sizing:border-box}
+
+html,body{
+  height:100%;
+  margin:0;
+  font-family: Arial, sans-serif;
+
+  /* ✅ FIX: make background transparent so photo is visible */
+  background: transparent;
+
+  color: var(--text);
+  overflow-x: hidden; /* ✅ small safety */
+}
+
+/* =========================================================
+   ✅ PHOTO BACKGROUND (REPLACED VIDEO)
+   ========================================================= */
+.photo-bg{
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  overflow: hidden;
+
+  background:
+    radial-gradient(1200px 600px at 15% 10%, rgba(35,65,99,0.55), transparent 60%),
+    radial-gradient(900px 500px at 85% 20%, rgba(95,143,184,0.45), transparent 60%),
+    linear-gradient(180deg, rgba(15,23,42,0.62), rgba(15,23,42,0.40)),
+    url("images/LMCM BLDG.jpg") center/cover no-repeat;
+}
+
+/* ✅ simple topbar (not your hero header) */
+.topbar{
+  position: sticky;
+  top:0;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(2, 6, 23, 0.06);
+}
+
+.topbar .nav-link{
+  color: var(--text);
+  font-weight: 600;
+}
+
+.topbar .nav-link:hover{
+  color: var(--green2);
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:800;
+  letter-spacing:.5px;
+  color: var(--green);
+  text-transform: uppercase;
+  font-size: 0.95rem;
+}
+
+.brand img{height:38px}
+
+/* ✅ page layout */
+.page{
+  padding: 28px 0 60px;
+
+  /* ✅ ensure page content stays above background */
+  position: relative;
+  z-index: 1;
+}
+
+/* ✅ hero strip updated to faded blue gradient */
+.hero-strip{
+  background: linear-gradient(135deg, var(--green), var(--green2));
+  color: white;
+  border-radius: 18px;
+  padding: 26px 26px;
+  box-shadow: var(--shadow);
+  margin-bottom: 18px;
+  overflow:hidden;
+  position:relative;
+}
+
+.hero-strip::after{
+  content:"";
+  position:absolute;
+  top:-70px;
+  right:-70px;
+  width:240px;
+  height:240px;
+  border-radius:50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.22), rgba(255,255,255,0.06) 55%, transparent 70%);
+}
+
+.hero-strip h1{
+  margin:0 0 8px;
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.hero-strip p{
+  margin:0;
+  color: rgba(255,255,255,0.92);
+  max-width: 740px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+@media (max-width: 991px){
+  .grid{grid-template-columns:1fr}
+}
+
+.card{
+  background: var(--card);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(2,6,23,0.06);
+  overflow:hidden;
+}
+
+.card::before{
+  content:"";
+  display:block;
+  height:6px;
+  background: linear-gradient(90deg, rgba(95,143,184,0.55), rgba(47,79,115,0.30));
+}
+
+.card-head{
+  padding: 18px 18px 0;
+}
+
+.card-head h2{
+  font-size: 1.15rem;
+  margin: 0;
+  font-weight: 800;
+}
+
+.card-head small{
+  display:block;
+  margin-top:6px;
+  color: var(--muted);
+}
+
+.card-body{
+  padding: 18px;
+}
+
+.form-control,
+.custom-select{
+  border-radius: 12px;
+  border: 1px solid rgba(2,6,23,0.14);
+  height: 46px;
+  transition: box-shadow .2s ease, border-color .2s ease, transform .2s ease;
+  background: #ffffff;
+}
+
+.form-control:focus,
+.custom-select:focus{
+  border-color: rgba(95,143,184,0.85);
+  box-shadow: 0 0 0 4px rgba(95,143,184,0.18);
+  outline: none;
+}
+
+textarea.form-control{
+  height:auto;
+  min-height: 110px;
+  padding-top: 10px;
+}
+
+.btn-main{
+  background: linear-gradient(135deg, var(--green2), var(--green));
+  color: #fff;
+  font-weight: 800;
+  border-radius: 12px;
+  border: none;
+  height: 46px;
+  width: 100%;
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+
+.btn-main:hover{
+  filter: brightness(1.02);
+  box-shadow: 0 12px 28px rgba(47,79,115,0.22);
+  color:#fff;
+}
+
+.btn-main:active{
+  transform: translateY(1px);
+}
+
+.back-link{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color: var(--green2);
+  font-weight: 800;
+  text-decoration:none;
+}
+
+.back-link:hover{
+  color: var(--green);
+  text-decoration:none;
+}
+
+footer{
+  margin-top: 24px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.status{
+  display:none;
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #eef6ff;
+  border: 1px solid rgba(95,143,184,0.25);
+  color: #1e3a5f;
+  font-weight: 700;
+}
+
+/* ✅ optional: make icon button look clean (for password toggle) */
+button{
+  font-family: inherit;
+}
+
+/* =========================================================
+   ✅ BUTTON EFFECTS + TOPBAR EFFECTS (kept as-is)
+   ========================================================= */
+button,
+.btn{
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus,
+.btn:focus{
+  outline: none;
+}
+
+button:focus-visible,
+.btn:focus-visible{
+  box-shadow: var(--ring) !important;
+}
+
+.btn-main{
+  position: relative;
+  overflow: hidden;
+  letter-spacing: .2px;
+  transform: translateZ(0);
+  box-shadow: 0 10px 24px rgba(15,23,42,0.10);
+}
+
+.btn-main::after{
+  content:"";
+  position:absolute;
+  top:-60%;
+  left:-40%;
+  width:60%;
+  height:220%;
+  transform: rotate(18deg);
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255,255,255,0.22) 40%,
+    rgba(255,255,255,0.08) 60%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity .25s ease, left .7s ease;
+  pointer-events:none;
+}
+
+.btn-main:hover{
+  transform: translateY(-1px);
+  box-shadow: var(--btn-glow);
+  filter: saturate(1.05) brightness(1.03);
+}
+
+.btn-main:hover::after{
+  opacity: 1;
+  left: 120%;
+}
+
+.btn-main:active{
+  transform: translateY(1px) scale(0.99);
+  box-shadow: 0 10px 22px rgba(35,65,99,0.18);
+  filter: brightness(0.98);
+}
+
+.btn-main:disabled,
+.btn-main[disabled]{
+  opacity: .65;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+#togglePass{
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .15s ease, background .15s ease, box-shadow .15s ease, color .15s ease;
+}
+
+#togglePass:hover{
+  background: rgba(95,143,184,0.14);
+  color: var(--green);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 18px rgba(15,23,42,0.10);
+}
+
+#togglePass:active{
+  transform: translateY(1px) scale(0.98);
+  box-shadow: none;
+}
+
+.topbar .nav-link{
+  position: relative;
+  border-radius: 12px;
+  padding: 8px 12px;
+  transition: background .18s ease, transform .18s ease, color .18s ease;
+}
+
+.topbar .nav-link:hover{
+  background: rgba(95,143,184,0.12);
+  transform: translateY(-1px);
+}
+
+.back-link{
+  position: relative;
+  padding: 2px 0;
+}
+
+.back-link::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-3px;
+  width:0%;
+  height:2px;
+  background: linear-gradient(90deg, var(--green2), var(--green));
+  border-radius: 99px;
+  transition: width .22s ease;
+}
+
+.back-link:hover::after{
+  width:100%;
+}
+
+.topbar{
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #5f8fb8;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(2, 6, 23, 0.06);
+  transition: background .25s ease, box-shadow .25s ease, transform .25s ease;
+}
+
+.topbar::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-1px;
+  height:2px;
+  background: linear-gradient(90deg, rgba(95,143,184,0.15), rgba(95,143,184,0.65), rgba(35,65,99,0.25));
+  opacity: .9;
+  pointer-events:none;
+}
+
+.topbar.is-scrolled{
+  background: rgba(255,255,255,0.90);
+  box-shadow: 0 14px 35px rgba(15,23,42,0.14);
+}
+
+.brand{
+  position: relative;
+  transition: transform .18s ease, filter .18s ease;
+}
+
+.brand:hover{
+  transform: translateY(-1px);
+  filter: drop-shadow(0 10px 18px rgba(35,65,99,0.18));
+}
+
+.brand img{
+  transition: transform .2s ease;
+}
+
+.brand:hover img{
+  transform: rotate(-2deg) scale(1.02);
+}
+
+.topbar .nav-link{
+  position: relative;
+  overflow: hidden;
+}
+
+.topbar .nav-link::after{
+  content:"";
+  position:absolute;
+  left:12px;
+  right:12px;
+  bottom:6px;
+  height:2px;
+  background: linear-gradient(90deg, var(--green2), var(--green));
+  border-radius: 99px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .22s ease;
+  opacity: .95;
+}
+
+.topbar .nav-link:hover::after{
+  transform: scaleX(1);
+}
+
+.topbar .nav-link:active{
+  transform: translateY(0px) scale(0.98);
+}
