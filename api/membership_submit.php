@@ -27,7 +27,7 @@ if (isset($_FILES["photo"]) && $_FILES["photo"]["error"] === UPLOAD_ERR_OK) {
     exit;
   }
 
-  $uploadDir = __DIR__ . "/uploads";
+  $uploadDir = dirname(__DIR__) . "/uploads";
   if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
   $newName = "member_" . $user_id . "_" . time() . "." . $ext;
@@ -47,8 +47,8 @@ if (isset($_FILES["photo"]) && $_FILES["photo"]["error"] === UPLOAD_ERR_OK) {
 $form_json = json_encode($form, JSON_UNESCAPED_UNICODE);
 
 try {
-  $ins = $pdo->prepare("INSERT INTO membership_submissions (user_id, photo_path, form_json) VALUES (?,?,?)");
-  $ins->execute([$user_id, $photo_path, $form_json]);
+  $ins = $pdo->prepare("INSERT INTO membership_submissions (user_id, photo_path, form_json, status) VALUES (?,?,?,?)");
+  $ins->execute([$user_id, $photo_path, $form_json, ""]);
 
   echo json_encode(["ok" => true]);
 } catch (Throwable $e) {

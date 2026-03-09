@@ -54,7 +54,7 @@ try {
         FROM membership_submissions ms
         LEFT JOIN users u ON ms.user_id = u.id
         {$whereSQL}
-        ORDER BY ms.submitted_at DESC
+        ORDER BY ms.submitted_at ASC, ms.id ASC
     ";
 
         $st = $pdo->prepare($sql);
@@ -113,6 +113,37 @@ try {
         ");
         $st->execute([$status, $notes ?: null, $admin["id"], $id]);
 
+        echo json_encode(["ok" => true]);
+        exit;
+    }
+
+    // ── DELETE application ──────────────────────────────────
+    if ($action === "delete") {
+        require_post();
+        // Only full admin can delete
+        if ($admin["role"] !== "admin") {
+            echo json_encode(["ok" => false, "error" => "Insufficient permissions"]);
+            exit;
+        }
+        $data = json_input();
+        $id = (int) ($data["id"] ?? 0);
+
+        // Get photo path first
+        $st = $pdo->prepare("SELECT photo_path FROM membership_submissions WHERE id = ?");
+        $st->execute([$id]);
+        $row = $st->fetch();
+
+        // Delete photo file if it exists
+        if ($row && !empty($row["photo_path"])) {
+            $photoPath = trim((string)$row["photo_path"]);
+            $file = realpath(__DIR__ . "/..") . "/" . ltrim(str_replace(["../", "..\\"], "", $photoPath), "/\\");
+
+            if ($file && file_exists($file) && is_file($file)) {
+                unlink($file);
+            }
+        }
+
+        $pdo->prepare("DELETE FROM membership_submissions WHERE id = ?")->execute([$id]);
         echo json_encode(["ok" => true]);
         exit;
     }
@@ -228,7 +259,6 @@ try {
     }
 
     echo json_encode(["ok" => false, "error" => "Unknown action"]);
-
 } catch (Throwable $e) {
     http_response_code(500);
     echo json_encode(["ok" => false, "error" => "Server error: " . $e->getMessage()]);

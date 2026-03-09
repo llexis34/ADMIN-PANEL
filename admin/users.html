@@ -133,9 +133,9 @@
       return;
     }
 
-    tbody.innerHTML = data.data.map(u => `
+    tbody.innerHTML = data.data.map((u, index) => `
       <tr>
-        <td>${u.id}</td>
+        <td>${index + 1}</td>
         <td>${esc(u.first_name||"")} ${esc(u.last_name||"")}</td>
         <td>${esc(u.email||"")}</td>
         <td>${esc(u.phone||"")}</td>

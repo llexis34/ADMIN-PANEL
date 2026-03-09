@@ -173,9 +173,9 @@
       return;
     }
 
-    tbody.innerHTML = data.data.map(a => `
+    tbody.innerHTML = data.data.map((a, index) => `
       <tr>
-        <td>${a.id}</td>
+        <td>${index + 1}</td>
         <td><strong>${esc(a.username)}</strong>${a.id == myId ? ' <span style="color:#16a34a;font-size:0.78rem;">(you)</span>' : ''}</td>
         <td>${esc(a.email)}</td>
         <td><span class="badge ${a.role === 'admin' ? 'badge-admin' : 'badge-sub'}">${a.role === 'admin' ? 'Admin' : 'Sub-Admin'}</span></td>

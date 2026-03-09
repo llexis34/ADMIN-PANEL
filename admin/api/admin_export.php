@@ -27,7 +27,7 @@ $status_filter = $_GET["status"] ?? "";
 $params = [];
 $where  = "";
 
-if (in_array($status_filter, ["Incomplete","Approved"], true)) {
+if (in_array($status_filter, ["Incomplete", "Approved"], true)) {
     $where    = "WHERE ms.status = ?";
     $params[] = $status_filter;
 }
@@ -54,9 +54,25 @@ fwrite($out, "\xEF\xBB\xBF");
 
 // Header row
 fputcsv($out, [
-    "ID","First Name","Last Name","Email","Phone","Status","Submitted At",
-    "Application Type","Home Address","Gender","Birthdate","Age","Civil Status",
-    "Education","Livelihood","Monthly Income","Mobile","TIN","Work Address"
+    "ID",
+    "First Name",
+    "Last Name",
+    "Email",
+    "Phone",
+    "Status",
+    "Submitted At",
+    "Application Type",
+    "Home Address",
+    "Gender",
+    "Birthdate",
+    "Age",
+    "Civil Status",
+    "Education",
+    "Livelihood",
+    "Monthly Income",
+    "Mobile",
+    "TIN",
+    "Work Address"
 ]);
 
 foreach ($data as $row) {
@@ -77,7 +93,7 @@ foreach ($data as $row) {
         $f["civil_status"]        ?? "",
         $f["education"]           ?? "",
         $f["livelihood"]          ?? "",
-        $f["gross_monthly_income"]?? "",
+        $f["gross_monthly_income"] ?? "",
         $f["mobile"]              ?? "",
         $f["tin"]                 ?? "",
         $f["work_address"]        ?? "",

@@ -127,9 +127,9 @@
         return;
       }
 
-      tbody.innerHTML = data.recent.map(row => `
+      tbody.innerHTML = data.recent.map((row, index) => `
       <tr>
-        <td>${row.id}</td>
+        <td>${index + 1}</td>
         <td>${esc(row.first_name || "")} ${esc(row.last_name || "")}</td>
         <td>${esc(row.email || "")}</td>
         <td><span class="badge ${row.status ? 'badge-' + row.status.toLowerCase() : ''}">${row.status || '—'}</span></td>

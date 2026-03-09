@@ -38,7 +38,7 @@ try {
             }
         }
 
-        $sql = "SELECT id, first_name, last_name, email, phone, is_active, created_at FROM users {$where} ORDER BY created_at DESC";
+        $sql = "SELECT id, first_name, last_name, email, phone, is_active, created_at FROM users {$where} ORDER BY created_at ASC, id ASC";
         $st = $pdo->prepare($sql);
         $st->execute($params);
         echo json_encode(["ok" => true, "data" => $st->fetchAll()]);

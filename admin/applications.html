@@ -197,11 +197,9 @@
       <div class="modal-footer">
         <button class="btn btn-secondary" onclick="closeModal('viewModal')">Close</button>
         <button class="btn btn-primary"
-          onclick="window.open('api/admin_export_pdf.php?id=' + currentViewId + '&mode=print', '_blank')">🖨️
-          Print</button>
+          onclick="window.open('api/admin_export_pdf.php?id=' + currentViewId + '&mode=print', '_blank')">Print</button>
         <button class="btn btn-success"
-          onclick="window.open('api/admin_export_pdf.php?id=' + currentViewId + '&mode=pdf', '_blank')">📄 Export as
-          PDF</button>
+          onclick="window.open('api/admin_export_pdf.php?id=' + currentViewId + '&mode=pdf', '_blank')">Export as PDF</button>
       </div>
     </div>
   </div>
@@ -218,7 +216,7 @@
         <div class="form-group">
           <label>Status</label>
           <select id="statusSelect" class="form-control">
-            <option value="Approved">Approved / Active</option>
+            <option value="Approved">Approved</option>
             <option value="Incomplete">Incomplete</option>
           </select>
         </div>
@@ -299,22 +297,22 @@
         return;
       }
 
-      tbody.innerHTML = data.data.map(row => `
-    <tr>
-      <td>${row.id}</td>
-      <td>${esc(row.first_name || "")} ${esc(row.last_name || "")}</td>
-      <td>${esc(row.email || "")}</td>
-      <td>${esc(row.phone || "")}</td>
-      <td><span class="badge ${row.status ? 'badge-' + row.status.toLowerCase() : ''}">${row.status || '—'}</span></td>
-      <td>${row.submitted_at ? row.submitted_at.slice(0, 10) : ""}</td>
-      <td>
-        <button class="btn btn-info btn-sm" onclick="openView(${row.id})">View</button>
-        <button class="btn btn-warning btn-sm" onclick="openStatus(${row.id}, '${row.status}')">Status</button>
-        <button class="btn btn-primary btn-sm" onclick="openEdit(${row.id})">Edit</button>
-        ${currentRole === "admin" ? `<button class="btn btn-danger btn-sm" onclick="deleteApp(${row.id})">Delete</button>` : ""}
-      </td>
-    </tr>
-  `).join("");
+     tbody.innerHTML = data.data.map((row, index) => `
+     <tr>
+        <td>${index + 1}</td>
+        <td>${esc(row.first_name || "")} ${esc(row.last_name || "")}</td>
+        <td>${esc(row.email || "")}</td>
+        <td>${esc(row.phone || "")}</td>
+        <td><span class="badge ${row.status ? 'badge-' + row.status.toLowerCase() : ''}">${row.status || '—'}</span></td>
+        <td>${row.submitted_at ? row.submitted_at.slice(0, 10) : ""}</td>
+        <td>
+         <button class="btn btn-info btn-sm" onclick="openView(${row.id})">View</button>
+         <button class="btn btn-warning btn-sm" onclick="openStatus(${row.id}, '${row.status}')">Status</button>
+         <button class="btn btn-primary btn-sm" onclick="openEdit(${row.id})">Edit</button>
+         ${currentRole === "admin" ? `<button class="btn btn-danger btn-sm" onclick="deleteApp(${row.id})">Delete</button>` : ""}
+        </td>
+      </tr>
+    `).join("");
     }
 
     function exportPDF() {

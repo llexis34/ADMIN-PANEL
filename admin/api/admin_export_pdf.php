@@ -55,6 +55,25 @@ if (!$row) {
 
 $f = json_decode($row["form_json"] ?? "{}", true) ?: [];
 
+$displayNo = 1;
+
+try {
+    $numSt = $pdo->prepare("
+        SELECT COUNT(*) + 1 AS display_no
+        FROM membership_submissions
+        WHERE submitted_at < ?
+           OR (submitted_at = ? AND id < ?)
+    ");
+    $numSt->execute([
+        $row["submitted_at"],
+        $row["submitted_at"],
+        $row["id"]
+    ]);
+    $displayNo = (int)($numSt->fetch()["display_no"] ?? 1);
+} catch (Throwable $e) {
+    $displayNo = 1;
+}
+
 function v($val): string
 {
     return htmlspecialchars((string)($val ?? ""), ENT_QUOTES, 'UTF-8');
@@ -78,7 +97,7 @@ if (!empty($row["photo_path"])) {
     if (file_exists($abs)) {
         $imgData = base64_encode(file_get_contents($abs));
         $mime = str_ends_with(strtolower($abs), ".png") ? "image/png" : "image/jpeg";
-        $photo = "<img src='data:{$mime};base64,{$imgData}' style='width:90px;height:110px;object-fit:cover;border:1px solid #ccc;' />";
+        $photo = "<img src='data:{$mime};base64,{$imgData}' style='width:100%;height:100%;object-fit:contain;border:0;display:block;' />";
     }
 }
 
@@ -90,7 +109,7 @@ $logoPath = __DIR__ . "/../../images/limcoma logoo.png";
 
 if (file_exists($logoPath)) {
     $data = base64_encode(file_get_contents($logoPath));
-    $logoSmall = "<img src='data:image/png;base64,$data' style='height:18px;margin-right:-4px;vertical-align:middle;'>";
+    $logoSmall = "<img src='data:image/png;base64,$data' class='header-logo' alt='LIMCOMA Logo' />";
 }
 
 ob_start();
@@ -100,7 +119,7 @@ ob_start();
 
 <head>
     <meta charset="UTF-8" />
-    <title>Membership Form - <?= v($fullName) ?></title>
+    <title>Print Membership Form - <?= v($fullName) ?></title>
     <style>
         * {
             box-sizing: border-box;
@@ -157,16 +176,20 @@ ob_start();
         }
 
         .meta-photo {
-            width: 25%;
+            width: 15%;
             text-align: right;
             vertical-align: top;
+            padding-right: 0;
         }
 
         .photo-box {
-            width: 110px;
-            height: 130px;
+            width: 90px;
+            height: 110px;
             display: inline-block;
             overflow: hidden;
+            border: 1px solid #ccc;
+            text-align: center;
+            vertical-align: top;
         }
 
         .photo-box img {
@@ -244,22 +267,20 @@ ob_start();
         }
 
         .header-top {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2px;
+            text-align: center;
+            margin-top: 2px;
         }
 
-        .header-top img {
-            height: 18px;
-            position: relative;
-            top: 2px;
+        .header-logo {
+            height: 14px;
+            vertical-align: middle;
+            margin-right: -2px;
         }
 
         .coop-name {
             font-size: 10px;
             color: #444;
-            line-height: 1;
+            vertical-align: middle;
         }
 
         .form-title {
@@ -267,7 +288,34 @@ ob_start();
             color: #15355a;
             letter-spacing: 1px;
             font-weight: bold;
-            margin-top: 2px;
+            margin-top: 0;
+            line-height: 1.2;
+        }
+
+        th.section,
+        td.lbl,
+        .benef-table th {
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        th.section {
+            background: #15355a !important;
+            color: #ffffff !important;
+        }
+
+        td.lbl {
+            background: #f0f4f8 !important;
+            color: #15355a !important;
+        }
+
+        .benef-table th {
+            background: #e8f0f8 !important;
+            color: #15355a !important;
         }
 
         @media print {
@@ -295,11 +343,7 @@ ob_start();
     <?php if ($mode !== "pdf"): ?>
         <div class="no-print" style="margin-bottom:12px;">
             <button onclick="window.print()"
-                style="padding:8px 18px;background:#15355a;color:#fff;border:none;border-radius:4px;font-size:13px;cursor:pointer;font-weight:bold;">🖨️ Print</button>
-
-            <button onclick="window.location.href='?id=<?= (int)$row["id"] ?>&mode=pdf'"
-                style="padding:8px 18px;background:#16a34a;color:#fff;border:none;border-radius:4px;font-size:13px;cursor:pointer;font-weight:bold;margin-left:8px;">📄 Export as PDF</button>
-
+                style="padding:8px 18px;background:#15355a;color:#fff;border:none;border-radius:4px;font-size:13px;cursor:pointer;font-weight:bold;">Print Form</button>
             <button onclick="window.close()"
                 style="padding:8px 14px;background:#6b7280;color:#fff;border:none;border-radius:4px;font-size:13px;cursor:pointer;margin-left:8px;">Close</button>
         </div>
@@ -307,17 +351,15 @@ ob_start();
 
     <div class="header">
         <div class="form-title">MEMBERSHIP APPLICATION FORM</div>
-        <div class="header-top">
-            <?= $logoSmall ?>
-            <span class="coop-name">LIMCOMA MULTI-PURPOSE COOPERATIVE</span>
-        </div>
+
+        <div class="header-top"><?= $logoSmall ?><span class="coop-name">LIMCOMA MULTI-PURPOSE COOPERATIVE</span></div>
     </div>
 
     <table class="top-meta">
         <tr>
             <td class="meta-left">
                 <strong>Application Type:</strong> <?= v($f["application_type"] ?? "") ?><br />
-                <strong>Application #:</strong> <?= (int)$row["id"] ?><br />
+                <strong>Application No:</strong> <?= (int)$displayNo ?><br />
                 <strong>Submitted:</strong> <?= v(substr($row["submitted_at"] ?? "", 0, 10)) ?>
             </td>
 
@@ -327,7 +369,7 @@ ob_start();
                 $cls = $s === "Approved" ? "" : "incomplete";
                 $label = $s === "Approved" ? "Approved / Active" : "Incomplete";
                 ?>
-                <?php if ($mode !== "pdf"): ?>
+                <?php if ($mode !== "pdf" && $mode !== "print"): ?>
                     <span class="status-badge <?= $cls ?>"><?= v($label) ?></span>
                 <?php endif; ?>
             </td>

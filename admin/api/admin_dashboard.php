@@ -24,7 +24,7 @@ try {
                u.first_name, u.last_name, u.email
         FROM membership_submissions ms
         LEFT JOIN users u ON ms.user_id = u.id
-        ORDER BY ms.submitted_at DESC
+        ORDER BY ms.submitted_at ASC, ms.id ASC
         LIMIT 5
     ")->fetchAll();
 
