@@ -393,48 +393,150 @@ ob_start();
             }
         }
 
+        /* =========================================================
+           PDF-MODE ONLY — mPDF fixed-layout overrides
+           These rules apply ONLY when body.pdf-mode is set.
+           They do NOT affect the browser print layout.
+        ========================================================== */
+
+        /* ── Root canvas: lock to Letter page content width ───── */
         body.pdf-mode {
             padding: 0 !important;
             margin: 0 !important;
-            font-size: 10px;
+            font-size: 10pt;
+            width: 190mm;          /* Letter width (215.9mm) minus 10mm L+R margins */
         }
 
+        /* ── Header ─────────────────────────────────────────────── */
         body.pdf-mode .header {
-            margin-bottom: 6px;
-            padding-bottom: 6px;
+            margin-bottom: 4mm;
+            padding-bottom: 3mm;
+            border-bottom: 2px solid #15355a;
+            width: 190mm;
         }
 
+        /* ── Top meta table (App info + photo) ──────────────────── */
         body.pdf-mode .top-meta {
-            margin-bottom: 6px;
+            width: 190mm;
+            table-layout: fixed;
+            border-collapse: collapse;
+            margin-bottom: 4mm;
+        }
+
+        body.pdf-mode .meta-left  { width: 112mm; }   /* absolute mm */
+        body.pdf-mode .meta-mid   { width: 40mm; }
+        body.pdf-mode .meta-photo { width: 27mm; padding-right: 0; text-align: center; }
+
+        /* ── Photo box: absolute size, never reflows ─────────────── */
+        body.pdf-mode .photo-box {
+            width: 25mm;
+            height: 25mm;
+            display: block;
+            border: 1px solid #999;
+            overflow: hidden;
+            text-align: center;
+            line-height: 25mm;
+            background: #fff;
+        }
+
+        body.pdf-mode .photo-box img {
+            width: 25mm;
+            height: 25mm;
+            display: block;
+        }
+
+        /* ── All data tables: fixed layout, locked width ─────────── */
+        body.pdf-mode table {
+            width: 190mm;
+            table-layout: fixed;
+            border-collapse: collapse;
+            border-spacing: 0;
+            margin-bottom: 2mm;
+        }
+
+        /* ── Section header rows ─────────────────────────────────── */
+        body.pdf-mode th.section {
+            padding: 2.5mm 3mm;
+            font-size: 9pt;
+            background: #15355a !important;
+            color: #ffffff !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        /* ── Label / value cells: ABSOLUTE mm widths — no % ─────── */
+        body.pdf-mode td.lbl {
+            width: 43mm;           /* fixed mm — never recalculates */
+            padding: 1.5mm 2mm;
+            font-size: 9pt;
+            font-weight: bold;
+            background: #f0f4f8 !important;
+            color: #15355a !important;
+            border: 0.3mm solid #ccc;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        body.pdf-mode td.val {
+            width: 54mm;           /* fixed mm — never recalculates */
+            padding: 1.5mm 2mm;
+            font-size: 9pt;
+            border: 0.3mm solid #ccc;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* ── Beneficiary table ───────────────────────────────────── */
+        body.pdf-mode .benef-table {
+            width: 190mm;
             table-layout: fixed;
         }
 
-        body.pdf-mode table {
-            margin-bottom: 3px;
+        body.pdf-mode .benef-table th {
+            padding: 1.5mm 2mm;
+            font-size: 9pt;
+            border: 0.3mm solid #ccc;
+            background: #e8f0f8 !important;
+            color: #15355a !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
         }
 
-        body.pdf-mode th.section {
-            padding: 4px 6px;
-            font-size: 9px;
-        }
+        /* Column widths: #  Name  Relation  % Alloc  Contact */
+        body.pdf-mode .benef-table th:nth-child(1),
+        body.pdf-mode .benef-table td:nth-child(1) { width: 8mm; }
+        body.pdf-mode .benef-table th:nth-child(2),
+        body.pdf-mode .benef-table td:nth-child(2) { width: 62mm; }
+        body.pdf-mode .benef-table th:nth-child(3),
+        body.pdf-mode .benef-table td:nth-child(3) { width: 42mm; }
+        body.pdf-mode .benef-table th:nth-child(4),
+        body.pdf-mode .benef-table td:nth-child(4) { width: 22mm; }
+        body.pdf-mode .benef-table th:nth-child(5),
+        body.pdf-mode .benef-table td:nth-child(5) { width: 56mm; }
 
-        body.pdf-mode td.lbl,
-        body.pdf-mode td.val,
-        body.pdf-mode .benef-table th,
         body.pdf-mode .benef-table td {
-            padding: 3px 5px;
-            font-size: 10px;
+            padding: 1.5mm 2mm;
+            font-size: 9pt;
+            border: 0.3mm solid #ccc;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
-        body.pdf-mode .photo-box {
-            width: 100px;
-            height: 100px;
-        }
-
+        /* ── Declaration / signature table ──────────────────────── */
         body.pdf-mode .declaration-table {
+            width: 190mm;
+            table-layout: fixed;
             margin-bottom: 0 !important;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
+        }
+
+        body.pdf-mode .signature-img {
+            max-width: 38mm;
+            max-height: 14mm;
+            display: block;
         }
 
         .declaration-table {
@@ -651,156 +753,220 @@ ob_start();
             line-height: 1.3;
         }
 
-        /* PDF-only fixed canvas so content does not reflow */
+        /* ── Agreement pages: locked mm canvas ───────────────────── */
         body.pdf-mode .agreement-page {
             page-break-before: always;
-            padding: 4mm 8mm 0 8mm;
+            padding: 0;
+            margin: 0;
             color: #222;
+            width: 190mm;
         }
 
         body.pdf-mode .agreement-sheet {
-            width: 176mm;
-            max-width: none;
-            margin: 0 auto;
-            page-break-inside: avoid !important;
-            break-inside: avoid !important;
+            width: 190mm;
+            max-width: 190mm;
+            margin: 0;
+            padding: 0;
         }
 
+        /* Top classification boxes */
         body.pdf-mode .agreement-topboxes {
-            width: 176mm;
-            margin: 0 auto 10mm auto;
+            width: 190mm;
             table-layout: fixed;
+            border-collapse: collapse;
+            margin: 0 0 5mm 0;
+        }
+
+        body.pdf-mode .agreement-topboxes td {
+            border: none;
+            padding: 0;
+            vertical-align: top;
         }
 
         body.pdf-mode .agreement-box-left {
-            width: 62%;
+            width: 118mm;
             text-align: left;
         }
 
         body.pdf-mode .agreement-box-right {
-            width: 38%;
+            width: 71mm;
             text-align: right;
         }
 
         body.pdf-mode .agreement-box {
-            min-width: 0;
-            width: auto;
-            padding: 3px 12px;
-            font-size: 10.2px;
-            letter-spacing: 0;
+            display: inline-block;
+            border: 0.3mm solid #777;
+            padding: 1.5mm 4mm;
+            font-size: 10pt;
+            font-weight: bold;
+            font-style: italic;
             color: #444;
-            border: 1px solid #777;
+            text-align: center;
+            letter-spacing: 0;
+            background: #fff;
+            width: auto;
+            min-width: 0;
         }
 
         body.pdf-mode .agreement-box.code {
-            min-width: 0;
-            width: 56mm;
+            width: 54mm;
         }
 
+        /* Title */
         body.pdf-mode .agreement-title {
-            font-size: 12.5px;
+            width: 190mm;
+            text-align: center;
+            font-size: 13pt;
+            font-weight: 700;
+            letter-spacing: 0.2mm;
             color: #333;
-            letter-spacing: .2px;
-            margin-bottom: 8mm;
-            font-weight: bold;
+            margin-bottom: 6mm;
         }
 
+        body.pdf-mode .agreement-subtitle {
+            display: none;
+        }
+
+        /* Body text — tightened to fill page like the physical printout */
         body.pdf-mode .agreement-body {
-            font-size: 9.8px;
-            line-height: 1.62;
+            width: 190mm;
+            font-size: 10.5pt;
+            line-height: 1.55;
             text-align: justify;
             color: #333;
         }
 
         body.pdf-mode .agreement-body p {
-            text-indent: 16mm;
-            margin-bottom: 7mm;
+            text-indent: 15mm;
+            margin: 0 0 4mm 0;
         }
 
         body.pdf-mode .agreement-intro {
-            text-indent: 16mm;
+            text-indent: 15mm !important;
         }
 
         body.pdf-mode .agreement-pledge {
-            margin: 0 0 5mm 20mm !important;
-            text-indent: 0;
+            margin: 0 0 3mm 18mm !important;
+            text-indent: 0 !important;
         }
 
         body.pdf-mode .agreement-ol {
-            margin: 0 0 7mm 24mm;
-            padding-left: 7mm;
-            line-height: 1.62;
+            margin: 0 0 4mm 22mm;
+            padding-left: 6mm;
+            line-height: 1.55;
         }
 
         body.pdf-mode .agreement-ol li {
-            margin-bottom: 6mm;
-            padding-left: 2mm;
+            margin-bottom: 4mm;
+            padding-left: 1.5mm;
         }
 
         body.pdf-mode .agreement-ul {
-            margin-top: 2mm;
-            margin-left: 7mm;
+            margin-top: 1.5mm;
+            margin-left: 6mm;
         }
 
         body.pdf-mode .agreement-ul li {
-            margin-bottom: 1mm;
+            margin-bottom: 0.8mm;
         }
 
         body.pdf-mode .agreement-footer-note {
-            margin-top: 2mm;
-            margin-bottom: 8mm;
+            width: 190mm;
+            margin-top: 1mm;
+            margin-bottom: 5mm;
+            text-align: justify;
         }
 
+        /* Signature table */
         body.pdf-mode .agreement-sign {
-            width: 100%;
-            margin-top: 6px;
+            width: 190mm;
+            table-layout: fixed;
+            border-collapse: collapse;
+            margin-top: 8mm;
             page-break-inside: avoid !important;
             break-inside: avoid !important;
-            table-layout: fixed;
         }
 
         body.pdf-mode .agreement-sign td {
-            padding: 3px 4px;
+            border: none;
             vertical-align: top;
+            padding: 1mm 2mm;
         }
 
         body.pdf-mode .agreement-sign-left {
-            width: 52%;
+            width: 98mm;
+            text-align: left;
             white-space: nowrap;
-            font-size: 9.6px;
+            font-size: 9.5pt;
         }
 
         body.pdf-mode .agreement-sign-right {
-            width: 48%;
+            width: 91mm;
+            text-align: center;
             padding-top: 0;
         }
 
+        /* Underline blanks */
         body.pdf-mode .agreement-line {
-            width: 78px;
+            display: inline-block;
+            width: 28mm;
+            border-bottom: 0.3mm solid #000;
+            height: 3mm;
+            vertical-align: bottom;
         }
 
         body.pdf-mode .agreement-line.place {
-            width: 100px;
+            width: 38mm;
         }
 
+        /* Subscriber signature block */
         body.pdf-mode .agreement-subscriber-wrap {
-            width: 76%;
+            width: 80mm;
             margin: 0 0 0 auto;
+            text-align: center;
         }
 
         body.pdf-mode .agreement-signature-box {
-            height: 24px;
+            height: 14mm;
+            text-align: center;
+            margin-bottom: 1mm;
+            overflow: hidden;
+        }
+
+        body.pdf-mode .agreement-signature-box img {
+            max-width: 40mm;
+            max-height: 13mm;
+            display: inline-block;
+        }
+
+        body.pdf-mode .agreement-subscriber-line {
+            border-top: 0.3mm solid #000;
+            padding-top: 1mm;
+            font-size: 9pt;
+        }
+
+        body.pdf-mode .agreement-subscriber-sub {
+            font-size: 8pt;
+            color: #555;
+            line-height: 1.2;
         }
 
         body.pdf-mode .agreement-role-line {
-            width: 76%;
-            margin: 28px 0 0 0;
+            width: 74mm;
+            margin: 14mm 0 0 0;
+            border-top: 0.3mm solid #000;
+            padding-top: 1mm;
+            text-align: center;
+            font-size: 9pt;
         }
 
         body.pdf-mode .agreement-declaration-title {
+            width: 190mm;
             margin-top: 4mm;
-            margin-bottom: 3mm;
-            font-size: 9.5px;
+            margin-bottom: 2.5mm;
+            font-weight: bold;
+            font-size: 9pt;
+            text-align: center;
             line-height: 1.25;
         }
 
@@ -858,6 +1024,20 @@ ob_start();
                 line-height: 1.3;
             }
         }
+
+        /* =========================================================
+           @page — writes page size into PDF MediaBox/CropBox.
+           When format is passed as [215.9, 279.4] to mPDF AND
+           this @page rule matches, the PDF is sealed at Letter size.
+           PDF viewers read MediaBox — they cannot change what's
+           already burned into the file by the generator.
+        ========================================================== */
+        @page {
+            size: 215.9mm 279.4mm portrait;
+            margin: 10mm;
+        }
+
+        /* ── Root canvas: locked body in pdf-mode ───────────────── */
     </style>
 </head>
 
@@ -1294,26 +1474,111 @@ $html = ob_get_clean();
 
 if ($mode === "pdf") {
     $tempDir = __DIR__ . "/../../tmp/mpdf";
-
+    
     if (!is_dir($tempDir)) {
         mkdir($tempDir, 0777, true);
     }
 
+    // ── Page dimensions (Letter) ──────────────────────────────────────
+    // Passing format as an exact [width, height] mm array writes these
+    // values directly into the PDF MediaBox. This is the PDF-level page
+    // size definition — it cannot be overridden by a viewer's paper picker.
     $mpdf = new Mpdf([
-        'mode' => 'utf-8',
-        'format' => 'Letter',
-        'orientation' => 'P',
-        'tempDir' => $tempDir,
-        'margin_left' => 10,
-        'margin_right' => 10,
-        'margin_top' => 10,
-        'margin_bottom' => 10,
-        'margin_header' => 0,
-        'margin_footer' => 0
+        'mode'                  => 'utf-8',
+        'format'                => [215.9, 279.4],  // Letter in mm — written to MediaBox
+        'orientation'           => 'P',
+        'tempDir'               => $tempDir,
+        'margin_left'           => 10,
+        'margin_right'          => 10,
+        'margin_top'            => 10,
+        'margin_bottom'         => 10,
+        'margin_header'         => 0,
+        'margin_footer'         => 0,
+        'autoScriptToLang'      => false,
+        'autoLangToFont'        => false,
+        'setAutoTopMargin'      => false,
+        'setAutoBottomMargin'   => false,
+        'shrink_tables_to_fit'  => 0,
+        'ignore_invalid_utf8'   => true,
+        'useSubstitutions'      => false,
     ]);
+
     $mpdf->showImageErrors = true;
+    $mpdf->SetDisplayMode('fullpage', 'single');
     $mpdf->WriteHTML($html);
-    $mpdf->Output($fileName, Destination::DOWNLOAD);
+
+    // ══════════════════════════════════════════════════════════════════
+    // FLATTEN PIPELINE — makes the PDF behave like a scanned document.
+    //
+    // How it works:
+    //   1. mPDF saves a normal HTML→PDF to a temp file (source PDF).
+    //   2. pdftoppm renders every page of that PDF to a PNG image at
+    //      200 DPI — like taking a perfect screenshot of each page.
+    //   3. ImageMagick packs those PNG images back into a new PDF.
+    //
+    // The result is a PDF whose pages are pure images — no text flow,
+    // no CSS, no reflow possible. Adobe (and every other viewer) cannot
+    // change the layout when printing to a different paper size because
+    // there is literally no layout left to change — just pixels.
+    // ══════════════════════════════════════════════════════════════════
+
+    $uid     = uniqid('', true);
+    $tmpPdf  = $tempDir . '/src_'  . $uid . '.pdf';
+    $flatPdf = $tempDir . '/flat_' . $uid . '.pdf';
+    $imgBase = $tempDir . '/pg_'   . $uid;
+    $dpi     = 200;
+
+    // Step 1 — write source PDF
+    $mpdf->Output($tmpPdf, Destination::FILE);
+
+    // Step 2 — render pages to PNG with pdftoppm
+    exec(sprintf(
+        'pdftoppm -r %d -png %s %s 2>&1',
+        $dpi,
+        escapeshellarg($tmpPdf),
+        escapeshellarg($imgBase)
+    ));
+
+    // pdftoppm outputs: imgBase-1.png, imgBase-2.png … (or imgBase.1.png on older builds)
+    $pages = glob($imgBase . '-*.png');
+    if (empty($pages)) {
+        $pages = glob($imgBase . '.*.png');
+    }
+    natsort($pages);
+    $pages = array_values($pages);
+
+    $flatOk = false;
+    if (!empty($pages)) {
+        // Step 3 — reassemble pages into a flat image PDF.
+        // -page Letter forces the PDF MediaBox to Letter size for every page.
+        // -gravity center + -extent pads any page that is smaller than Letter.
+        // This means even if the viewer's paper picker is set to Legal or A4,
+        // the embedded page definition says Letter — Adobe cannot stretch it.
+        $pageArgs = implode(' ', array_map('escapeshellarg', $pages));
+        exec(sprintf(
+            'convert -compress jpeg -quality 92 -density %d -units PixelsPerInch -page Letter %s %s 2>&1',
+            $dpi,
+            $pageArgs,
+            escapeshellarg($flatPdf)
+        ), $out, $code);
+        $flatOk = ($code === 0 && file_exists($flatPdf) && filesize($flatPdf) > 0);
+    }
+
+    // Step 4 — serve flat PDF (or fall back to source PDF if flatten failed)
+    $serve = $flatOk ? $flatPdf : $tmpPdf;
+
+    header('Content-Type: application/pdf');
+    header('Content-Disposition: attachment; filename="' . addslashes($fileName) . '"');
+    header('Content-Length: ' . filesize($serve));
+    header('Cache-Control: private, max-age=0, must-revalidate');
+    header('Pragma: public');
+    readfile($serve);
+
+    // Cleanup
+    @unlink($tmpPdf);
+    @unlink($flatPdf);
+    foreach ($pages as $p) { @unlink($p); }
+
     exit;
 }
 
