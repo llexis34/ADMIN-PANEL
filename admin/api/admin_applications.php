@@ -49,7 +49,7 @@ try {
         $whereSQL = $where ? "WHERE " . implode(" AND ", $where) : "";
 
         $sql = "
-        SELECT ms.id, ms.user_id, ms.status, ms.submitted_at, ms.photo_path,
+        SELECT ms.id, ms.user_id, ms.status, ms.branch, ms.submitted_at, ms.photo_path,
                u.first_name, u.last_name, u.email, u.phone
         FROM membership_submissions ms
         LEFT JOIN users u ON ms.user_id = u.id
@@ -251,6 +251,23 @@ try {
 
         $pdo->prepare("UPDATE membership_submissions SET form_json = ? WHERE id = ?")
             ->execute([json_encode($form), $id]);
+
+        // Save branch as a dedicated column (not inside form_json)
+        if (array_key_exists("_branch", $data)) {
+            $allowed_branches = [
+                "ALFONSO","ATIMONAN","BALAYAN","CALAPAN","CALAUAG","CALATAGAN",
+                "CANDELARIA","CUENCA","GUMACA","LIPA","LUCENA","MAMBURAO",
+                "NAGCARLAN","NASUGBU","PAGSANJAN","PINAMALAYAN","ROSARIO","ROXAS",
+                "SAN JOSE","SAN JOSEMIN","SAN PABLO","SAN PASCUAL","SINILOAN",
+                "TAGKAWAYAN","TANAUAN","TAYABAS","TIAONG",
+                "" // allow clearing
+            ];
+            $branch = trim((string)$data["_branch"]);
+            if (in_array($branch, $allowed_branches, true)) {
+                $pdo->prepare("UPDATE membership_submissions SET branch = ? WHERE id = ?")
+                    ->execute([$branch === "" ? null : $branch, $id]);
+            }
+        }
 
         echo json_encode(["ok" => true]);
         exit;

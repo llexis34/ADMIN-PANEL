@@ -165,6 +165,7 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
+                <th>Branch</th>
                 <th>Status</th>
                 <th>Submitted</th>
                 <th style="min-width:220px;">Actions</th>
@@ -172,7 +173,7 @@
             </thead>
             <tbody id="appTbody">
               <tr>
-                <td colspan="7"
+                <td colspan="8"
                   style="text-align:center;padding:20px;color:#888;">Loading...</td>
               </tr>
             </tbody>
@@ -194,10 +195,19 @@
           <button class="btn btn-secondary"
             onclick="closeModal('viewModal')">Close</button>
           <button class="btn btn-primary"
-            onclick="window.open('api/admin_export_pdf.php?id=' + currentViewId + '&mode=print', '_blank')">Print</button>
+            onclick="window.open('api/admin_export_pdf.php?id=' + currentViewId + '&mode=print', '_blank')">Print
+          </button>
           <button class="btn btn-success"
             onclick="window.open('api/admin_export_pdf.php?id=' + currentViewId + '&mode=pdf', '_blank')">Export
-            as PDF</button>
+            as PDF
+          </button>
+          <button class="btn btn-success"onclick="exportSubscriptionPDF(currentViewId)">
+            Export Subscription Agreement
+          </button>
+
+          <button class="btn btn-success"onclick="exportKasunduanPDF(currentViewId)">
+            Export Kasunduan
+          </button>
         </div>
       </div>
     </div>
@@ -304,7 +314,7 @@
             const tbody = document.getElementById("appTbody");
 
             if (!data.ok || !data.data.length) {
-                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:20px;color:#888;">No applications found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:20px;color:#888;">No applications found.</td></tr>`;
                 return;
             }
 
@@ -314,6 +324,7 @@
         <td>${esc(row.first_name || "")} ${esc(row.last_name || "")}</td>
         <td>${esc(row.email || "")}</td>
         <td>${esc(row.phone || "")}</td>
+        <td>${row.branch ? `<span style="font-size:0.82rem;font-weight:normal;color:#222;">${esc(row.branch)}</span>` : '<span style="color:#bbb;font-size:0.82rem;">—</span>'}</td>
         <td><span class="badge ${row.status ? 'badge-' + row.status.toLowerCase() : ''}">${row.status || '—'}</span></td>
         <td>${row.submitted_at ? row.submitted_at.slice(0, 10) : ""}</td>
         <td>
@@ -368,6 +379,7 @@
       <div class="section-head">Personal Information</div>
       <div class="detail-grid">
         ${field("Application Type", f.application_type)}
+        ${field("LIMCOMA Branch", d.branch)}
         ${field("Last Name", f.last_name || d.last_name)}
         ${field("First Name", f.first_name || d.first_name)}
         ${field("Middle Name", f.middle_name)}
@@ -551,6 +563,18 @@
             <option value="Transfer to Regular" ${f.application_type === "Transfer to Regular" ? "selected" : ""}>Transfer to Regular</option>
           </select>
         </div>
+        <div class="ef"><label>LIMCOMA Branch</label>
+          <select id="ef_branch">
+            <option value="">— Select Branch —</option>
+            ${[
+              "ALFONSO","ATIMONAN","BALAYAN","CALAPAN","CALAUAG","CALATAGAN",
+              "CANDELARIA","CUENCA","GUMACA","LIPA","LUCENA","MAMBURAO",
+              "NAGCARLAN","NASUGBU","PAGSANJAN","PINAMALAYAN","ROSARIO","ROXAS",
+              "SAN JOSE","SAN JOSEMIN","SAN PABLO","SAN PASCUAL","SINILOAN",
+              "TAGKAWAYAN","TANAUAN","TAYABAS","TIAONG"
+            ].map(b => `<option value="${b}" ${(d.branch || "") === b ? "selected" : ""}>${b}</option>`).join("")}
+          </select>
+        </div>
         <div class="ef"><label>Gender</label>
           <select id="ef_gender">
             <option value="">Select</option>
@@ -712,7 +736,10 @@
         const el = document.getElementById("ef_" + f);
         if (el) body[f] = el.value;
       });
-      // agreement flags are stored as-is from form_data, not editable via text input
+
+      // Branch is a dedicated DB column, not inside form_json — send separately
+      const branchEl = document.getElementById("ef_branch");
+      if (branchEl) body._branch = branchEl.value;
 
 
       const r = await post("api/admin_applications.php?action=edit", body);
@@ -770,6 +797,20 @@
       });
       document.getElementById("statusFilter").addEventListener("change", loadApplications);
     });
+
+    function exportSubscriptionPDF(id) {
+      window.open(
+        "api/admin_export_subscription_pdf.php?id=" + id,
+        "_blank"
+     );
+    }
+
+    function exportKasunduanPDF(id) {
+      window.open(
+        "api/admin_export_kasunduan_pdf.php?id=" + id,
+        "_blank"
+      );
+    }
     </script>
   </body>
 
