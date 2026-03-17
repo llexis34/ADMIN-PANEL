@@ -48,7 +48,7 @@
         <!-- Role Guide -->
         <div class="card" style="margin-bottom:16px;background:#f0f6ff;border-left:4px solid #15355a;">
             <div style="font-size:0.88rem;color:#15355a;">
-                <strong>Admin:</strong> Full access — manage users, sub-admins, delete accounts, all features.<br/>
+                <strong>Admin:</strong> Full access — manage users, sub-admins, delete accounts, all features.<br />
                 <strong>Sub-Admin:</strong> Can view/edit applications, update statuses. Cannot manage admin accounts.
             </div>
         </div>
@@ -100,9 +100,9 @@
                 <div class="form-group">
                     <label>Role</label>
                     <select id="cRole" class="form-control">
-          <option value="sub_admin">Sub-Admin</option>
-          <option value="admin">Admin</option>
-        </select>
+                        <option value="sub_admin">Sub-Admin</option>
+                        <option value="admin">Admin</option>
+                    </select>
                 </div>
             </div>
             <div class="modal-footer">
@@ -132,12 +132,13 @@
                 <div class="form-group">
                     <label>Role</label>
                     <select id="eRole" class="form-control">
-          <option value="sub_admin">Sub-Admin</option>
-          <option value="admin">Admin</option>
-        </select>
+                        <option value="sub_admin">Sub-Admin</option>
+                        <option value="admin">Admin</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label>New Password <span style="color:#888;font-weight:normal;">(leave blank to keep current)</span></label>
+                    <label>New Password <span style="color:#888;font-weight:normal;">(leave blank to keep
+                            current)</span></label>
                     <input type="password" id="ePassword" class="form-control" placeholder="New password (optional)" />
                 </div>
             </div>
@@ -149,6 +150,75 @@
     </div>
 
     <script>
+        let _confirmResolve = null;
+
+        function showConfirm({ type, title, message, label }) {
+            const ICONS = {
+                logout: { bg: '#E6F1FB', stroke: '#185FA5', svg: '<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>' },
+                delete: { bg: '#FCEBEB', stroke: '#A32D2D', svg: '<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>' },
+                disable: { bg: '#FAEEDA', stroke: '#854F0B', svg: '<circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>' },
+                activate: { bg: '#EAF3DE', stroke: '#3B6D11', svg: '<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' },
+            };
+            const OK_STYLE = {
+                logout: 'color:#185FA5',
+                delete: 'color:#A32D2D',
+                disable: 'color:#854F0B',
+                activate: 'color:#3B6D11',
+            };
+            const OK_ANIM = {
+                delete: 'shake',
+                disable: 'flash-warn',
+                activate: 'bounce-up',
+                logout: 'spin-out',
+            };
+            return new Promise(resolve => {
+                _confirmResolve = resolve;
+                const ic = ICONS[type];
+                const iconEl = document.getElementById('confirmIcon');
+                iconEl.style.background = ic.bg;
+                iconEl.innerHTML = '<svg width="26" height="26" fill="none" stroke="' + ic.stroke + '" stroke-width="2" viewBox="0 0 24 24">' + ic.svg + '</svg>';
+                document.getElementById('confirmTitle').textContent = title;
+                document.getElementById('confirmMsg').innerHTML = message;
+                const ok = document.getElementById('confirmOk');
+                ok.textContent = label;
+                ok.style.cssText = OK_STYLE[type] || '';
+                ok.dataset.animType = OK_ANIM[type] || 'shake';
+                ok.onclick = () => {
+                    const animClass = ok.dataset.animType;
+                    ok.classList.remove('shake', 'flash-warn', 'bounce-up', 'spin-out');
+                    void ok.offsetWidth;
+                    ok.classList.add(animClass);
+                    // Close immediately — animation plays as dialog fades out
+                    closeConfirmAndResolve(true);
+                };
+                document.getElementById('confirmModal').classList.add('open');
+            });
+        }
+
+        function closeConfirmAndResolve(val) {
+            const overlay = document.getElementById('confirmModal');
+            overlay.classList.add('closing');
+            setTimeout(() => {
+                overlay.classList.remove('open', 'closing');
+                // Clean up any leftover animation classes
+                const ok = document.getElementById('confirmOk');
+                const cancel = document.getElementById('confirmCancel');
+                if (ok) ok.classList.remove('shake', 'flash-warn', 'bounce-up', 'spin-out');
+                if (cancel) cancel.classList.remove('clicked');
+                if (_confirmResolve) { _confirmResolve(val); _confirmResolve = null; }
+            }, 190);
+        }
+
+        function closeConfirm() {
+            const cancelBtn = document.getElementById('confirmCancel');
+            if (cancelBtn) {
+                cancelBtn.classList.remove('clicked');
+                void cancelBtn.offsetWidth;
+                cancelBtn.classList.add('clicked');
+            }
+            // Close immediately — animation plays as dialog fades out
+            closeConfirmAndResolve(false);
+        }
         let myId = 0;
 
         (async function init() {
@@ -190,7 +260,7 @@
         <td>${esc(a.email)}</td>
         <td><span class="badge ${a.role === 'admin' ? 'badge-admin' : 'badge-sub'}">${a.role === 'admin' ? 'Admin' : 'Sub-Admin'}</span></td>
         <td><span class="badge ${a.is_active ? 'badge-active' : 'badge-inactive'}">${a.is_active ? 'Active' : 'Inactive'}</span></td>
-        <td>${a.last_login ? a.last_login.slice(0,16) : '<span style="color:#bbb;">Never</span>'}</td>
+        <td>${a.last_login ? a.last_login.slice(0, 16) : '<span style="color:#bbb;">Never</span>'}</td>
         <td>
           <button class="btn btn-primary btn-sm" onclick="openEdit(${a.id},'${esc(a.username)}','${esc(a.email)}','${a.role}')">Edit</button>
           ${a.id != myId ? `
@@ -200,111 +270,136 @@
         </td>
       </tr>
     `).join("");
-  }
+        }
 
-  function openCreate() {
-    document.getElementById("cUsername").value = "";
-    document.getElementById("cEmail").value    = "";
-    document.getElementById("cPassword").value = "";
-    document.getElementById("cRole").value     = "sub_admin";
-    openModal("createModal");
-  }
+        function openCreate() {
+            document.getElementById("cUsername").value = "";
+            document.getElementById("cEmail").value = "";
+            document.getElementById("cPassword").value = "";
+            document.getElementById("cRole").value = "sub_admin";
+            openModal("createModal");
+        }
 
-  async function submitCreate() {
-    const body = {
-      username: document.getElementById("cUsername").value.trim(),
-      email:    document.getElementById("cEmail").value.trim(),
-      password: document.getElementById("cPassword").value,
-      role:     document.getElementById("cRole").value,
-    };
+        async function submitCreate() {
+            const body = {
+                username: document.getElementById("cUsername").value.trim(),
+                email: document.getElementById("cEmail").value.trim(),
+                password: document.getElementById("cPassword").value,
+                role: document.getElementById("cRole").value,
+            };
 
-    if (!body.username || !body.email || body.password.length < 8) {
-      showAlert("Username, email and password (8+ chars) are required.", "danger");
-      return;
-    }
+            if (!body.username || !body.email || body.password.length < 8) {
+                showAlert("Username, email and password (8+ chars) are required.", "danger");
+                return;
+            }
 
-    const r    = await post("api/admin_subadmins.php?action=create", body);
-    const data = await r.json();
+            const r = await post("api/admin_subadmins.php?action=create", body);
+            const data = await r.json();
 
-    if (!data.ok) { showAlert("Error: " + (data.error || "Failed"), "danger"); return; }
-    closeModal("createModal");
-    showAlert("Admin account created.", "success");
-    loadAdmins();
-  }
+            if (!data.ok) { showAlert("Error: " + (data.error || "Failed"), "danger"); return; }
+            closeModal("createModal");
+            showAlert("Admin account created.", "success");
+            loadAdmins();
+        }
 
-  function openEdit(id, username, email, role) {
-    document.getElementById("eId").value       = id;
-    document.getElementById("eUsername").value = username;
-    document.getElementById("eEmail").value    = email;
-    document.getElementById("eRole").value     = role;
-    document.getElementById("ePassword").value = "";
-    openModal("editModal");
-  }
+        function openEdit(id, username, email, role) {
+            document.getElementById("eId").value = id;
+            document.getElementById("eUsername").value = username;
+            document.getElementById("eEmail").value = email;
+            document.getElementById("eRole").value = role;
+            document.getElementById("ePassword").value = "";
+            openModal("editModal");
+        }
 
-  async function submitEdit() {
-    const body = {
-      id:       parseInt(document.getElementById("eId").value),
-      username: document.getElementById("eUsername").value.trim(),
-      email:    document.getElementById("eEmail").value.trim(),
-      role:     document.getElementById("eRole").value,
-      password: document.getElementById("ePassword").value,
-    };
+        async function submitEdit() {
+            const body = {
+                id: parseInt(document.getElementById("eId").value),
+                username: document.getElementById("eUsername").value.trim(),
+                email: document.getElementById("eEmail").value.trim(),
+                role: document.getElementById("eRole").value,
+                password: document.getElementById("ePassword").value,
+            };
 
-    const r    = await post("api/admin_subadmins.php?action=edit", body);
-    const data = await r.json();
+            const r = await post("api/admin_subadmins.php?action=edit", body);
+            const data = await r.json();
 
-    if (!data.ok) { showAlert("Error: " + (data.error || "Failed"), "danger"); return; }
-    closeModal("editModal");
-    showAlert("Account updated.", "success");
-    loadAdmins();
-  }
+            if (!data.ok) { showAlert("Error: " + (data.error || "Failed"), "danger"); return; }
+            closeModal("editModal");
+            showAlert("Account updated.", "success");
+            loadAdmins();
+        }
 
-  async function toggleActive(id, newState) {
-    if (!confirm((newState ? "Activate" : "Disable") + " this admin account?")) return;
-    const r    = await post("api/admin_subadmins.php?action=toggle_active", { id, is_active: newState });
-    const data = await r.json();
-    if (!data.ok) { showAlert("Error: " + (data.error || "Failed"), "danger"); return; }
-    showAlert("Account " + (newState ? "activated" : "disabled") + ".", "success");
-    loadAdmins();
-  }
+        async function toggleActive(id, newState) {
+            const type = newState ? 'activate' : 'disable';
+            const ok = await showConfirm({ type, label: newState ? 'Activate' : 'Disable', title: newState ? 'Activate this account?' : 'Disable this account?', message: newState ? 'The admin will regain access and be able to log in again.' : 'The admin will not be able to log in while their account is disabled.' });
+            if (!ok) return;
+            const r = await post("api/admin_subadmins.php?action=toggle_active", { id, is_active: newState });
+            const data = await r.json();
+            if (!data.ok) { showAlert("Error: " + (data.error || "Failed"), "danger"); return; }
+            showAlert("Account " + (newState ? "activated" : "disabled") + ".", "success");
+            loadAdmins();
+        }
 
-  async function deleteAdmin(id) {
-    if (!confirm("Delete this admin account permanently?")) return;
-    const r    = await post("api/admin_subadmins.php?action=delete", { id });
-    const data = await r.json();
-    if (!data.ok) { showAlert("Error: " + (data.error || "Failed"), "danger"); return; }
-    showAlert("Account deleted.", "success");
-    loadAdmins();
-  }
+        async function deleteAdmin(id) {
+            const ok = await showConfirm({ type: 'delete', title: 'Delete this admin account?', message: 'This will permanently remove the admin account. <strong>This cannot be undone.</strong>', label: 'Delete' });
+            if (!ok) return;
+            const r = await post("api/admin_subadmins.php?action=delete", { id });
+            const data = await r.json();
+            if (!data.ok) { showAlert("Error: " + (data.error || "Failed"), "danger"); return; }
+            showAlert("Account deleted.", "success");
+            loadAdmins();
+        }
 
-  function openModal(id)  { document.getElementById(id).classList.add("open"); }
-  function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+        function openModal(id) { document.getElementById(id).classList.add("open"); }
+        function closeModal(id) { document.getElementById(id).classList.remove("open"); }
 
-  function post(url, body) {
-    return fetch(url, {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
-    });
-  }
+        function post(url, body) {
+            return fetch(url, {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            });
+        }
 
-  function showAlert(msg, type) {
-    const box = document.getElementById("alertBox");
-    box.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
-    setTimeout(() => box.innerHTML = "", 3500);
-  }
+        function showAlert(msg, type) {
+            const box = document.getElementById("alertBox");
+            box.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+            setTimeout(() => box.innerHTML = "", 3500);
+        }
 
-  function esc(s) {
-    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-  }
+        function esc(s) {
+            return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+        }
 
-  async function adminLogout() {
-    if (!confirm("Logout?")) return;
-    await fetch("api/admin_logout.php", { method: "POST", credentials: "include" });
-    window.location.href = "login.html";
-  }
+        async function adminLogout() {
+            const ok = await showConfirm({ type: 'logout', title: 'Sign out?', message: 'You will be returned to the login page.', label: 'Sign out' });
+            if (!ok) return;
+            await fetch("api/admin_logout.php", { method: "POST", credentials: "include" });
+            window.location.href = "login.html";
+        }
     </script>
+
+    <!-- CONFIRM MODAL -->
+    <div class="overlay" id="confirmModal" onclick="if(event.target===this)closeConfirm()">
+        <div class="modal"
+            style="background:#fff;border-radius:14px;border:0.5px solid #e2e8f0;max-width:384px;width:100%;overflow:hidden;">
+            <div style="padding:28px 24px 18px;text-align:center;">
+                <div id="confirmIcon"
+                    style="width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+                </div>
+                <h3 id="confirmTitle" style="font-size:16px;font-weight:600;margin-bottom:7px;color:#111;"></h3>
+                <p id="confirmMsg" style="font-size:13px;color:#555;line-height:1.6;margin:0;"></p>
+            </div>
+            <div style="height:0.5px;background:#eee;"></div>
+            <div class="confirm-footer" style="display:grid;grid-template-columns:1fr 1fr;">
+                <button id="confirmCancel" class="btn-cancel" onclick="closeConfirm()"
+                    style="padding:14px;border:none;border-right:0.5px solid #eee;cursor:pointer;font-size:13.5px;font-weight:500;background:transparent;color:#444;font-family:inherit;">Cancel</button>
+                <button id="confirmOk" class="btn-ok"
+                    style="padding:14px;border:none;cursor:pointer;font-size:13.5px;font-weight:600;font-family:inherit;background:transparent;position:relative;overflow:hidden;"></button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

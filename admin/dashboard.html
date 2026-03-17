@@ -97,6 +97,76 @@
   </div>
 
   <script>
+    let _confirmResolve = null;
+
+    function showConfirm({ type, title, message, label }) {
+      const ICONS = {
+        logout: { bg: '#E6F1FB', stroke: '#185FA5', svg: '<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>' },
+        delete: { bg: '#FCEBEB', stroke: '#A32D2D', svg: '<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>' },
+        disable: { bg: '#FAEEDA', stroke: '#854F0B', svg: '<circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>' },
+        activate: { bg: '#EAF3DE', stroke: '#3B6D11', svg: '<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' },
+      };
+      const OK_STYLE = {
+        logout: 'color:#185FA5',
+        delete: 'color:#A32D2D',
+        disable: 'color:#854F0B',
+        activate: 'color:#3B6D11',
+      };
+      const OK_ANIM = {
+        delete: 'shake',
+        disable: 'flash-warn',
+        activate: 'bounce-up',
+        logout: 'spin-out',
+      };
+      return new Promise(resolve => {
+        _confirmResolve = resolve;
+        const ic = ICONS[type];
+        const iconEl = document.getElementById('confirmIcon');
+        iconEl.style.background = ic.bg;
+        iconEl.innerHTML = '<svg width="26" height="26" fill="none" stroke="' + ic.stroke + '" stroke-width="2" viewBox="0 0 24 24">' + ic.svg + '</svg>';
+        document.getElementById('confirmTitle').textContent = title;
+        document.getElementById('confirmMsg').innerHTML = message;
+        const ok = document.getElementById('confirmOk');
+        ok.textContent = label;
+        ok.style.cssText = OK_STYLE[type] || '';
+        ok.dataset.animType = OK_ANIM[type] || 'shake';
+        ok.onclick = () => {
+          const animClass = ok.dataset.animType;
+          ok.classList.remove('shake', 'flash-warn', 'bounce-up', 'spin-out');
+          void ok.offsetWidth;
+          ok.classList.add(animClass);
+          // Close immediately — animation plays as dialog fades out
+          closeConfirmAndResolve(true);
+        };
+        document.getElementById('confirmModal').classList.add('open');
+      });
+    }
+
+    function closeConfirmAndResolve(val) {
+      const overlay = document.getElementById('confirmModal');
+      overlay.classList.add('closing');
+      setTimeout(() => {
+        overlay.classList.remove('open', 'closing');
+        // Clean up any leftover animation classes
+        const ok = document.getElementById('confirmOk');
+        const cancel = document.getElementById('confirmCancel');
+        if (ok) ok.classList.remove('shake', 'flash-warn', 'bounce-up', 'spin-out');
+        if (cancel) cancel.classList.remove('clicked');
+        if (_confirmResolve) { _confirmResolve(val); _confirmResolve = null; }
+      }, 190);
+    }
+
+    function closeConfirm() {
+      const cancelBtn = document.getElementById('confirmCancel');
+      if (cancelBtn) {
+        cancelBtn.classList.remove('clicked');
+        void cancelBtn.offsetWidth;
+        cancelBtn.classList.add('clicked');
+      }
+      // Close immediately — animation plays as dialog fades out
+      closeConfirmAndResolve(false);
+    }
+
     (async function () {
       // Auth check
       const me = await (await fetch("api/admin_me.php", { credentials: "include" })).json();
@@ -144,11 +214,33 @@
     }
 
     async function adminLogout() {
-      if (!confirm("Logout?")) return;
+      const ok = await showConfirm({ type: 'logout', title: 'Sign out?', message: 'You will be returned to the login page.', label: 'Sign out' });
+      if (!ok) return;
       await fetch("api/admin_logout.php", { method: "POST", credentials: "include" });
       window.location.href = "login.html";
     }
   </script>
+
+  <!-- CONFIRM MODAL -->
+  <div class="overlay" id="confirmModal" onclick="if(event.target===this)closeConfirm()">
+    <div class="modal"
+      style="background:#fff;border-radius:14px;border:0.5px solid #e2e8f0;max-width:384px;width:100%;overflow:hidden;">
+      <div style="padding:28px 24px 18px;text-align:center;">
+        <div id="confirmIcon"
+          style="width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+        </div>
+        <h3 id="confirmTitle" style="font-size:16px;font-weight:600;margin-bottom:7px;color:#111;"></h3>
+        <p id="confirmMsg" style="font-size:13px;color:#555;line-height:1.6;margin:0;"></p>
+      </div>
+      <div style="height:0.5px;background:#eee;"></div>
+      <div class="confirm-footer" style="display:grid;grid-template-columns:1fr 1fr;">
+        <button id="confirmCancel" class="btn-cancel" onclick="closeConfirm()"
+          style="padding:14px;border:none;border-right:0.5px solid #eee;cursor:pointer;font-size:13.5px;font-weight:500;background:transparent;color:#444;font-family:inherit;">Cancel</button>
+        <button id="confirmOk" class="btn-ok"
+          style="padding:14px;border:none;cursor:pointer;font-size:13.5px;font-weight:600;font-family:inherit;background:transparent;position:relative;overflow:hidden;"></button>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

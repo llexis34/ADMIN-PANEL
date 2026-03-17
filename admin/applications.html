@@ -1,324 +1,392 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Applications | LIMCOMA Admin</title>
-    <link rel="shortcut icon" href="../images/limcoma logoo.png"
-      type="image/x-icon" />
-    <link rel="stylesheet" href="admin.css" />
-    <style>
-        .detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        
-        .detail-label {
-            font-size: 0.78rem;
-            color: #666;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        
-        .detail-value {
-            font-size: 0.92rem;
-            color: #222;
-            margin-top: 2px;
-        }
-        
-        .section-head {
-            font-weight: bold;
-            color: #15355a;
-            font-size: 0.9rem;
-            margin: 14px 0 8px;
-            border-bottom: 1px solid #dce4ed;
-            padding-bottom: 4px;
-        }
-        
-        @media print {
-            .modal-overlay {
-                display: flex !important;
-                position: static;
-                background: none;
-                padding: 0;
-            }
-            .modal-box {
-                box-shadow: none;
-                max-height: none;
-            }
-            .modal-header,
-            .modal-footer,
-            .topbar,
-            .sidebar,
-            .toolbar,
-            .card:not(#printCard),
-            .page-title {
-                display: none !important;
-            }
-            .main {
-                margin: 0;
-                padding: 0;
-            }
-            #printCard {
-                display: block !important;
-            }
-        }
-        
-        @media print {
-            /* Hide everything except the view modal content */
-            .topbar,
-            .sidebar,
-            .toolbar,
-            .page-title,
-            .card:not(#printTarget),
-            #alertBox,
-            .modal-footer,
-            .modal-header,
-            .modal-overlay:not(#viewModal) {
-                display: none !important;
-            }
-            /* Make the view modal render like a normal page */
-            .modal-overlay#viewModal {
-                position: static !important;
-                background: none !important;
-                display: block !important;
-                padding: 0 !important;
-            }
-            .modal-box {
-                box-shadow: none !important;
-                max-height: none !important;
-                max-width: 100% !important;
-                border-radius: 0 !important;
-            }
-            .main {
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-            body {
-                background: #fff !important;
-            }
-            /* Hide browser URL / header / footer */
-            @page {
-                margin: 12mm;
-                size: A4;
-            }
-        }
-    </style>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Applications | LIMCOMA Admin</title>
+  <link rel="shortcut icon" href="../images/limcoma logoo.png" type="image/x-icon" />
+  <link rel="stylesheet" href="admin.css" />
+  <style>
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
 
-  <body>
+    .detail-label {
+      font-size: 0.78rem;
+      color: #666;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
 
-    <!-- TOPBAR -->
-    <div class="topbar">
-      <div class="topbar-brand">
-        <img src="../images/limcoma logoo.png" alt="Logo" /> LIMCOMA Admin Panel
-      </div>
-      <div class="topbar-right">
-        <span id="adminName">Admin</span>
-        <button class="btn-logout" onclick="adminLogout()">Logout</button>
-      </div>
+    .detail-value {
+      font-size: 0.92rem;
+      color: #222;
+      margin-top: 2px;
+    }
+
+    .section-head {
+      font-weight: bold;
+      color: #15355a;
+      font-size: 0.9rem;
+      margin: 14px 0 8px;
+      border-bottom: 1px solid #dce4ed;
+      padding-bottom: 4px;
+    }
+
+    @media print {
+      .modal-overlay {
+        display: flex !important;
+        position: static;
+        background: none;
+        padding: 0;
+      }
+
+      .modal-box {
+        box-shadow: none;
+        max-height: none;
+      }
+
+      .modal-header,
+      .modal-footer,
+      .topbar,
+      .sidebar,
+      .toolbar,
+      .card:not(#printCard),
+      .page-title {
+        display: none !important;
+      }
+
+      .main {
+        margin: 0;
+        padding: 0;
+      }
+
+      #printCard {
+        display: block !important;
+      }
+    }
+
+    @media print {
+
+      /* Hide everything except the view modal content */
+      .topbar,
+      .sidebar,
+      .toolbar,
+      .page-title,
+      .card:not(#printTarget),
+      #alertBox,
+      .modal-footer,
+      .modal-header,
+      .modal-overlay:not(#viewModal) {
+        display: none !important;
+      }
+
+      /* Make the view modal render like a normal page */
+      .modal-overlay#viewModal {
+        position: static !important;
+        background: none !important;
+        display: block !important;
+        padding: 0 !important;
+      }
+
+      .modal-box {
+        box-shadow: none !important;
+        max-height: none !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
+      }
+
+      .main {
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      body {
+        background: #fff !important;
+      }
+
+      /* Hide browser URL / header / footer */
+      @page {
+        margin: 12mm;
+        size: A4;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-brand">
+      <img src="../images/limcoma logoo.png" alt="Logo" /> LIMCOMA Admin Panel
+    </div>
+    <div class="topbar-right">
+      <span id="adminName">Admin</span>
+      <button class="btn-logout" onclick="adminLogout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-section">Main</div>
+    <a href="dashboard.html"><span class="ico">&#9632;</span> Dashboard</a>
+    <a href="applications.html" class="active"><span class="ico">&#128196;</span> Applications</a>
+    <a href="users.html"><span class="ico">&#128100;</span> Users</a>
+    <div class="sidebar-section admin-only" style="display:none;">Admin</div>
+    <a href="subadmins.html" class="admin-only" style="display:none;"><span class="ico">&#128272;</span> Admin
+      Accounts</a>
+    <div class="sidebar-section">Site</div>
+    <a href="../index.html" target="_blank"><span class="ico">&#127760;</span>
+      Main Site</a>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="page-title">Membership Applications</div>
+
+    <!-- Toolbar -->
+    <div class="toolbar no-print">
+      <input type="text" id="searchInput" placeholder="Search by name or email..." style="min-width:220px;" />
+      <select id="statusFilter">
+        <option value>All Status</option>
+        <option value="Approved">Approved</option>
+        <option value="Incomplete">Incomplete</option>
+      </select>
+      <button class="btn btn-primary" onclick="loadApplications()">Search</button>
     </div>
 
-    <!-- SIDEBAR -->
-    <div class="sidebar">
-      <div class="sidebar-section">Main</div>
-      <a href="dashboard.html"><span class="ico">&#9632;</span> Dashboard</a>
-      <a href="applications.html" class="active"><span
-          class="ico">&#128196;</span> Applications</a>
-      <a href="users.html"><span class="ico">&#128100;</span> Users</a>
-      <div class="sidebar-section admin-only" style="display:none;">Admin</div>
-      <a href="subadmins.html" class="admin-only" style="display:none;"><span
-          class="ico">&#128272;</span> Admin
-        Accounts</a>
-      <div class="sidebar-section">Site</div>
-      <a href="../index.html" target="_blank"><span class="ico">&#127760;</span>
-        Main Site</a>
+    <div id="alertBox"></div>
+
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Branch</th>
+              <th>Status</th>
+              <th>Submitted</th>
+              <th style="min-width:220px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="appTbody">
+            <tr>
+              <td colspan="8" style="text-align:center;padding:20px;color:#888;">Loading...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
 
-    <!-- MAIN -->
-    <div class="main">
-      <div class="page-title">Membership Applications</div>
-
-      <!-- Toolbar -->
-      <div class="toolbar no-print">
-        <input type="text" id="searchInput"
-          placeholder="Search by name or email..." style="min-width:220px;" />
-        <select id="statusFilter">
-          <option value>All Status</option>
-          <option value="Approved">Approved</option>
-          <option value="Incomplete">Incomplete</option>
-        </select>
+  <!-- ── VIEW MODAL ─────────────────────────────────────────── -->
+  <div class="modal-overlay" id="viewModal">
+    <div class="modal-box" style="max-width:780px;">
+      <div class="modal-header">
+        <span>Application Details</span>
+        <button class="modal-close" onclick="closeModal('viewModal')">&#x2715;</button>
+      </div>
+      <div class="modal-body" id="viewBody">Loading...</div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('viewModal')">Close</button>
         <button class="btn btn-primary"
-          onclick="loadApplications()">Search</button>
-      </div>
+          onclick="window.open('api/admin_export_pdf.php?id=' + currentViewId + '&mode=print', '_blank')">Print
+        </button>
+        <button class="btn btn-success"
+          onclick="window.open('api/admin_export_pdf.php?id=' + currentViewId + '&mode=pdf', '_blank')">Export
+          as PDF
+        </button>
+        <button class="btn btn-success" onclick="exportSubscriptionPDF(currentViewId)">
+          Export Subscription Agreement
+        </button>
 
-      <div id="alertBox"></div>
-
-      <div class="card">
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Branch</th>
-                <th>Status</th>
-                <th>Submitted</th>
-                <th style="min-width:220px;">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="appTbody">
-              <tr>
-                <td colspan="8"
-                  style="text-align:center;padding:20px;color:#888;">Loading...</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <button class="btn btn-success" onclick="exportKasunduanPDF(currentViewId)">
+          Export Kasunduan
+        </button>
       </div>
     </div>
+  </div>
 
-    <!-- ── VIEW MODAL ─────────────────────────────────────────── -->
-    <div class="modal-overlay" id="viewModal">
-      <div class="modal-box" style="max-width:780px;">
-        <div class="modal-header">
-          <span>Application Details</span>
-          <button class="modal-close"
-            onclick="closeModal('viewModal')">&#x2715;</button>
+  <!-- ── STATUS MODAL ───────────────────────────────────────── -->
+  <div class="modal-overlay" id="statusModal">
+    <div class="modal-box" style="max-width:440px;">
+      <div class="modal-header">
+        <span>Update Application Status</span>
+        <button class="modal-close" onclick="closeModal('statusModal')">&#x2715;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="statusAppId" />
+        <div class="form-group">
+          <label>Status</label>
+          <select id="statusSelect" class="form-control">
+            <option value="Approved">Approved</option>
+            <option value="Incomplete">Incomplete</option>
+          </select>
         </div>
-        <div class="modal-body" id="viewBody">Loading...</div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary"
-            onclick="closeModal('viewModal')">Close</button>
-          <button class="btn btn-primary"
-            onclick="window.open('api/admin_export_pdf.php?id=' + currentViewId + '&mode=print', '_blank')">Print
-          </button>
-          <button class="btn btn-success"
-            onclick="window.open('api/admin_export_pdf.php?id=' + currentViewId + '&mode=pdf', '_blank')">Export
-            as PDF
-          </button>
-          <button class="btn btn-success"onclick="exportSubscriptionPDF(currentViewId)">
-            Export Subscription Agreement
-          </button>
-
-          <button class="btn btn-success"onclick="exportKasunduanPDF(currentViewId)">
-            Export Kasunduan
-          </button>
+        <div class="form-group">
+          <label>Admin Notes (optional)</label>
+          <textarea id="statusNotes" class="form-control" rows="3"
+            placeholder="Add notes about this decision..."></textarea>
         </div>
       </div>
-    </div>
-
-    <!-- ── STATUS MODAL ───────────────────────────────────────── -->
-    <div class="modal-overlay" id="statusModal">
-      <div class="modal-box" style="max-width:440px;">
-        <div class="modal-header">
-          <span>Update Application Status</span>
-          <button class="modal-close"
-            onclick="closeModal('statusModal')">&#x2715;</button>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" id="statusAppId" />
-          <div class="form-group">
-            <label>Status</label>
-            <select id="statusSelect" class="form-control">
-              <option value="Approved">Approved</option>
-              <option value="Incomplete">Incomplete</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Admin Notes (optional)</label>
-            <textarea id="statusNotes" class="form-control" rows="3"
-              placeholder="Add notes about this decision..."></textarea>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary"
-            onclick="closeModal('statusModal')">Cancel</button>
-          <button class="btn btn-primary" onclick="submitStatus()">Save
-            Status</button>
-        </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('statusModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="submitStatus()">Save
+          Status</button>
       </div>
     </div>
+  </div>
 
-    <!-- ── EDIT MODAL ─────────────────────────────────────────── -->
-    <div class="modal-overlay" id="editModal">
-      <div class="modal-box" style="max-width:680px;">
-        <div class="modal-header">
-          <span>Edit Application Info</span>
-          <button class="modal-close"
-            onclick="closeModal('editModal')">&#x2715;</button>
-        </div>
-        <div class="modal-body" id="editBody">Loading...</div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary"
-            onclick="closeModal('editModal')">Cancel</button>
-          <button class="btn btn-primary" onclick="submitEdit()">Save
-            Changes</button>
-        </div>
+  <!-- ── EDIT MODAL ─────────────────────────────────────────── -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal-box" style="max-width:680px;">
+      <div class="modal-header">
+        <span>Edit Application Info</span>
+        <button class="modal-close" onclick="closeModal('editModal')">&#x2715;</button>
+      </div>
+      <div class="modal-body" id="editBody">Loading...</div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('editModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="submitEdit()">Save
+          Changes</button>
       </div>
     </div>
+  </div>
 
-    <script>
-        let currentRole = "";
-        let currentEditId = 0;
-        let currentViewId = 0; // ← ADD THIS LINE
+  <script>
+    let _confirmResolve = null;
 
-        (async function init() {
-            const me = await (await fetch("api/admin_me.php", {
-                credentials: "include"
-            })).json();
-            if (!me.ok) {
-                window.location.href = "login.html";
-                return;
-            }
+    function showConfirm({ type, title, message, label }) {
+      const ICONS = {
+        logout: { bg: '#E6F1FB', stroke: '#185FA5', svg: '<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>' },
+        delete: { bg: '#FCEBEB', stroke: '#A32D2D', svg: '<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/>' },
+        disable: { bg: '#FAEEDA', stroke: '#854F0B', svg: '<circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>' },
+        activate: { bg: '#EAF3DE', stroke: '#3B6D11', svg: '<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>' },
+      };
+      const OK_STYLE = {
+        logout: 'color:#185FA5',
+        delete: 'color:#A32D2D',
+        disable: 'color:#854F0B',
+        activate: 'color:#3B6D11',
+      };
+      const OK_ANIM = {
+        delete: 'shake',
+        disable: 'flash-warn',
+        activate: 'bounce-up',
+        logout: 'spin-out',
+      };
+      return new Promise(resolve => {
+        _confirmResolve = resolve;
+        const ic = ICONS[type];
+        const iconEl = document.getElementById('confirmIcon');
+        iconEl.style.background = ic.bg;
+        iconEl.innerHTML = '<svg width="26" height="26" fill="none" stroke="' + ic.stroke + '" stroke-width="2" viewBox="0 0 24 24">' + ic.svg + '</svg>';
+        document.getElementById('confirmTitle').textContent = title;
+        document.getElementById('confirmMsg').innerHTML = message;
+        const ok = document.getElementById('confirmOk');
+        ok.textContent = label;
+        ok.style.cssText = OK_STYLE[type] || '';
+        ok.dataset.animType = OK_ANIM[type] || 'shake';
+        ok.onclick = () => {
+          const animClass = ok.dataset.animType;
+          ok.classList.remove('shake', 'flash-warn', 'bounce-up', 'spin-out');
+          void ok.offsetWidth;
+          ok.classList.add(animClass);
+          // Close immediately — animation plays as dialog fades out
+          closeConfirmAndResolve(true);
+        };
+        document.getElementById('confirmModal').classList.add('open');
+      });
+    }
 
-            currentRole = me.role;
-            document.getElementById("adminName").textContent = me.username + " (" + me.role + ")";
+    function closeConfirmAndResolve(val) {
+      const overlay = document.getElementById('confirmModal');
+      overlay.classList.add('closing');
+      setTimeout(() => {
+        overlay.classList.remove('open', 'closing');
+        // Clean up any leftover animation classes
+        const ok = document.getElementById('confirmOk');
+        const cancel = document.getElementById('confirmCancel');
+        if (ok) ok.classList.remove('shake', 'flash-warn', 'bounce-up', 'spin-out');
+        if (cancel) cancel.classList.remove('clicked');
+        if (_confirmResolve) { _confirmResolve(val); _confirmResolve = null; }
+      }, 190);
+    }
 
-            if (me.role === "admin") {
-                document.querySelectorAll(".admin-only").forEach(el => el.style.display = "");
-            }
+    function closeConfirm() {
+      const cancelBtn = document.getElementById('confirmCancel');
+      if (cancelBtn) {
+        cancelBtn.classList.remove('clicked');
+        void cancelBtn.offsetWidth;
+        cancelBtn.classList.add('clicked');
+      }
+      // Close immediately — animation plays as dialog fades out
+      closeConfirmAndResolve(false);
+    }
 
-            // Check URL for ?view=ID
-            const params = new URLSearchParams(location.search);
-            const viewId = params.get("view");
+    let currentRole = "";
+    let currentEditId = 0;
+    let currentViewId = 0; // ← ADD THIS LINE
 
-            await loadApplications();
+    (async function init() {
+      const me = await (await fetch("api/admin_me.php", {
+        credentials: "include"
+      })).json();
+      if (!me.ok) {
+        window.location.href = "login.html";
+        return;
+      }
 
-            if (viewId) openView(parseInt(viewId));
-        })();
+      currentRole = me.role;
+      document.getElementById("adminName").textContent = me.username + " (" + me.role + ")";
 
-        async function loadApplications() {
-            const search = document.getElementById("searchInput").value.trim();
-            const status = document.getElementById("statusFilter").value;
-            const exportBtn = document.getElementById("exportBtn");
+      if (me.role === "admin") {
+        document.querySelectorAll(".admin-only").forEach(el => el.style.display = "");
+      }
 
-            let url = "api/admin_applications.php?action=list";
-            if (search) url += "&search=" + encodeURIComponent(search);
-            if (status) url += "&status=" + encodeURIComponent(status);
+      // Check URL for ?view=ID
+      const params = new URLSearchParams(location.search);
+      const viewId = params.get("view");
 
-            // Update export link only if button exists
-            if (exportBtn) {
-                exportBtn.href = "api/admin_export.php" + (status ? "?status=" + encodeURIComponent(status) : "");
-            }
+      await loadApplications();
 
-            const r = await fetch(url, {
-                credentials: "include"
-            });
-            const data = await r.json();
+      if (viewId) openView(parseInt(viewId));
+    })();
 
-            const tbody = document.getElementById("appTbody");
+    async function loadApplications() {
+      const search = document.getElementById("searchInput").value.trim();
+      const status = document.getElementById("statusFilter").value;
+      const exportBtn = document.getElementById("exportBtn");
 
-            if (!data.ok || !data.data.length) {
-                tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:20px;color:#888;">No applications found.</td></tr>`;
-                return;
-            }
+      let url = "api/admin_applications.php?action=list";
+      if (search) url += "&search=" + encodeURIComponent(search);
+      if (status) url += "&status=" + encodeURIComponent(status);
 
-            tbody.innerHTML = data.data.map((row, index) => `
+      // Update export link only if button exists
+      if (exportBtn) {
+        exportBtn.href = "api/admin_export.php" + (status ? "?status=" + encodeURIComponent(status) : "");
+      }
+
+      const r = await fetch(url, {
+        credentials: "include"
+      });
+      const data = await r.json();
+
+      const tbody = document.getElementById("appTbody");
+
+      if (!data.ok || !data.data.length) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:20px;color:#888;">No applications found.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = data.data.map((row, index) => `
      <tr>
         <td>${index + 1}</td>
         <td>${esc(row.first_name || "")} ${esc(row.last_name || "")}</td>
@@ -462,34 +530,34 @@
       </div>
       ${field("Signature Date", f.signature_date)}
 
-      ${(function(){
-        const cl = (f.checklist_files && typeof f.checklist_files === 'object') ? f.checklist_files : {};
-        const keys = Object.keys(cl);
-        if (!keys.length) return '';
-        const labels = {
-          a1:"Associate: Application Form", a2:"Associate: 2x2 Photo",
-          a3:"Associate: Gov't ID",         a4:"Associate: Birth/Marriage Cert",
-          r1:"Regular: Application Form",   r2:"Regular: 2x2 Photo",
-          r3:"Regular: Gov't ID",           r4:"Regular: Share Capital Proof",
-          r5:"Regular: ID Fee Proof"
-        };
-        let html = '<div class="section-head">Checklist Uploaded Files</div><div class="detail-grid">';
-        keys.forEach(function(k){
-          const path = cl[k];
-          const label = labels[k] || k;
-          const ext = path.split('.').pop().toLowerCase();
-          const isPdf = ext === 'pdf';
-          html += '<div class="detail-item"><div class="detail-label">' + esc(label) + '</div><div class="detail-value">';
-          if (isPdf) {
-            html += '<a href="../' + esc(path) + '" target="_blank">📄 View PDF</a>';
-          } else {
-            html += '<a href="../' + esc(path) + '" target="_blank"><img src="../' + esc(path) + '" style="max-width:110px;max-height:80px;border:1px solid #ccc;display:block;" /></a>';
-          }
-          html += '</div></div>';
-        });
-        html += '</div>';
-        return html;
-      })()}
+      ${(function () {
+          const cl = (f.checklist_files && typeof f.checklist_files === 'object') ? f.checklist_files : {};
+          const keys = Object.keys(cl);
+          if (!keys.length) return '';
+          const labels = {
+            a1: "Associate: Application Form", a2: "Associate: 2x2 Photo",
+            a3: "Associate: Gov't ID", a4: "Associate: Birth/Marriage Cert",
+            r1: "Regular: Application Form", r2: "Regular: 2x2 Photo",
+            r3: "Regular: Gov't ID", r4: "Regular: Share Capital Proof",
+            r5: "Regular: ID Fee Proof"
+          };
+          let html = '<div class="section-head">Checklist Uploaded Files</div><div class="detail-grid">';
+          keys.forEach(function (k) {
+            const path = cl[k];
+            const label = labels[k] || k;
+            const ext = path.split('.').pop().toLowerCase();
+            const isPdf = ext === 'pdf';
+            html += '<div class="detail-item"><div class="detail-label">' + esc(label) + '</div><div class="detail-value">';
+            if (isPdf) {
+              html += '<a href="../' + esc(path) + '" target="_blank">📄 View PDF</a>';
+            } else {
+              html += '<a href="../' + esc(path) + '" target="_blank"><img src="../' + esc(path) + '" style="max-width:110px;max-height:80px;border:1px solid #ccc;display:block;" /></a>';
+            }
+            html += '</div></div>';
+          });
+          html += '</div>';
+          return html;
+        })()}
     `;
     }
 
@@ -567,12 +635,12 @@
           <select id="ef_branch">
             <option value="">— Select Branch —</option>
             ${[
-              "ALFONSO","ATIMONAN","BALAYAN","CALAPAN","CALAUAG","CALATAGAN",
-              "CANDELARIA","CUENCA","GUMACA","LIPA","LUCENA","MAMBURAO",
-              "NAGCARLAN","NASUGBU","PAGSANJAN","PINAMALAYAN","ROSARIO","ROXAS",
-              "SAN JOSE","SAN JOSEMIN","SAN PABLO","SAN PASCUAL","SINILOAN",
-              "TAGKAWAYAN","TANAUAN","TAYABAS","TIAONG"
-            ].map(b => `<option value="${b}" ${(d.branch || "") === b ? "selected" : ""}>${b}</option>`).join("")}
+          "ALFONSO", "ATIMONAN", "BALAYAN", "CALAPAN", "CALAUAG", "CALATAGAN",
+          "CANDELARIA", "CUENCA", "GUMACA", "LIPA", "LUCENA", "MAMBURAO",
+          "NAGCARLAN", "NASUGBU", "PAGSANJAN", "PINAMALAYAN", "ROSARIO", "ROXAS",
+          "SAN JOSE", "SAN JOSEMIN", "SAN PABLO", "SAN PASCUAL", "SINILOAN",
+          "TAGKAWAYAN", "TANAUAN", "TAYABAS", "TIAONG"
+        ].map(b => `<option value="${b}" ${(d.branch || "") === b ? "selected" : ""}>${b}</option>`).join("")}
           </select>
         </div>
         <div class="ef"><label>Gender</label>
@@ -753,7 +821,8 @@
 
     // ── DELETE ──────────────────────────────────────────────
     async function deleteApp(id) {
-      if (!confirm("Delete this application permanently? This cannot be undone.")) return;
+      const ok = await showConfirm({ type: 'delete', title: 'Delete this application?', message: 'This will permanently remove the application. <strong>This cannot be undone.</strong>', label: 'Delete' });
+      if (!ok) return;
       const r = await post("api/admin_applications.php?action=delete", { id });
       const data = await r.json();
       if (!data.ok) { showAlert("Error: " + (data.error || "Failed"), "danger"); return; }
@@ -785,7 +854,8 @@
     }
 
     async function adminLogout() {
-      if (!confirm("Logout?")) return;
+      const ok = await showConfirm({ type: 'logout', title: 'Sign out?', message: 'You will be returned to the login page.', label: 'Sign out' });
+      if (!ok) return;
       await fetch("api/admin_logout.php", { method: "POST", credentials: "include" });
       window.location.href = "login.html";
     }
@@ -802,7 +872,7 @@
       window.open(
         "api/admin_export_subscription_pdf.php?id=" + id,
         "_blank"
-     );
+      );
     }
 
     function exportKasunduanPDF(id) {
@@ -811,7 +881,28 @@
         "_blank"
       );
     }
-    </script>
-  </body>
+  </script>
+
+  <!-- CONFIRM MODAL -->
+  <div class="overlay" id="confirmModal" onclick="if(event.target===this)closeConfirm()">
+    <div class="modal"
+      style="background:#fff;border-radius:14px;border:0.5px solid #e2e8f0;max-width:384px;width:100%;overflow:hidden;">
+      <div style="padding:28px 24px 18px;text-align:center;">
+        <div id="confirmIcon"
+          style="width:58px;height:58px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;">
+        </div>
+        <h3 id="confirmTitle" style="font-size:16px;font-weight:600;margin-bottom:7px;color:#111;"></h3>
+        <p id="confirmMsg" style="font-size:13px;color:#555;line-height:1.6;margin:0;"></p>
+      </div>
+      <div style="height:0.5px;background:#eee;"></div>
+      <div class="confirm-footer" style="display:grid;grid-template-columns:1fr 1fr;">
+        <button id="confirmCancel" class="btn-cancel" onclick="closeConfirm()"
+          style="padding:14px;border:none;border-right:0.5px solid #eee;cursor:pointer;font-size:13.5px;font-weight:500;color:#444;font-family:inherit;">Cancel</button>
+        <button id="confirmOk" class="btn-ok"
+          style="padding:14px;border:none;cursor:pointer;font-size:13.5px;font-weight:600;font-family:inherit;position:relative;overflow:hidden;"></button>
+      </div>
+    </div>
+  </div>
+</body>
 
 </html>
