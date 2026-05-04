@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -12,6 +13,7 @@
   <link rel="shortcut icon" href="images/limcoma logoo.png" type="image/x-icon" />
   <title>Application Form | LIMCOMA</title>
 </head>
+
 <body>
 
   <div class="photo-bg" aria-hidden="true"></div>
@@ -35,7 +37,8 @@
       <div class="hero-strip">
         <h1>Application Form</h1>
         <p>
-          Fill out the form below to apply for LIMCOMA. After submission, you will receive instructions for the next steps.
+          Fill out the form below to apply for LIMCOMA. After submission, you will receive instructions for the next
+          steps.
         </p>
       </div>
 
@@ -90,7 +93,8 @@
                 <div class="input-group">
                   <input type="password" class="form-control" name="password" id="password" required>
                   <div class="input-group-append">
-                    <button type="button" class="btn btn-light border" id="togglePass" aria-label="Toggle password visibility">
+                    <button type="button" class="btn btn-light border" id="togglePass"
+                      aria-label="Toggle password visibility">
                       <i class="fas fa-eye"></i>
                     </button>
                   </div>
@@ -102,7 +106,8 @@
                 <div class="input-group">
                   <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" required>
                   <div class="input-group-append">
-                    <button type="button" class="btn btn-light border" id="toggleConfirmPass" aria-label="Toggle confirm password visibility">
+                    <button type="button" class="btn btn-light border" id="toggleConfirmPass"
+                      aria-label="Toggle confirm password visibility">
                       <i class="fas fa-eye"></i>
                     </button>
                   </div>
@@ -111,11 +116,13 @@
 
               <button type="submit" class="btn btn-main">Sign Up</button>
 
-              <div id="statusMsg" class="status" style="display:none; margin-top:12px; padding:12px 14px; border-radius:10px; font-weight:800; background:#ecfdf5; border:1px solid rgba(16,185,129,.25); color:#065f46;">
+              <div id="statusMsg" class="status"
+                style="display:none; margin-top:12px; padding:12px 14px; border-radius:10px; font-weight:800; background:#ecfdf5; border:1px solid rgba(16,185,129,.25); color:#065f46;">
                 ✅ Signed Up Successfully!
               </div>
 
-              <div id="errorMsg" class="status" style="display:none; margin-top:12px; padding:12px 14px; border-radius:10px; font-weight:800; background:#fef2f2; border:1px solid rgba(239,68,68,.25); color:#991b1b;">
+              <div id="errorMsg" class="status"
+                style="display:none; margin-top:12px; padding:12px 14px; border-radius:10px; font-weight:800; background:#fef2f2; border:1px solid rgba(239,68,68,.25); color:#991b1b;">
                 ❌ Password and Confirm Password do not match.
               </div>
 
@@ -163,6 +170,34 @@
     </div>
   </div>
 
-  <script src="signin.js?v=3"></script>
+  <!-- ERROR DIALOG -->
+  <div id="errorModal" class="success-modal" aria-hidden="true">
+    <div class="success-backdrop"></div>
+
+    <div class="success-dialog" role="dialog" aria-modal="true" aria-labelledby="errorTitle">
+      <div class="success-dialog-top">
+        <div class="success-icon" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">
+          <i class="fas fa-exclamation"></i>
+        </div>
+        <h3 id="errorTitle">Sign Up Failed</h3>
+        <p id="errorModalMessage">Something went wrong. Please try again.</p>
+      </div>
+
+      <div class="success-dialog-body">
+        <div class="success-note">
+          Please check your details and try again.
+        </div>
+
+        <div class="success-actions">
+          <button type="button" id="closeErrorModalBtn" class="btn btn-modal-primary">
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="signin.js?v=4"></script>
 </body>
+
 </html>

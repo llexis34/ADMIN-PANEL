@@ -5,9 +5,9 @@ document.addEventListener("DOMContentLoaded", function () {
   setupPasswordToggle("password", "togglePass");
   setupPasswordToggle("confirmPassword", "toggleConfirmPass");
   setupSuccessModal();
+  setupErrorModal();
   headerScrollFX();
 });
-
 function restoreRememberedEmail() {
   const emailEl = document.getElementById("email");
   const rememberEl = document.getElementById("rememberMe");
@@ -117,16 +117,15 @@ async function handleMembershipForm() {
       const data = await res.json();
 
       if (!data.ok) {
-        alert(data.error || "Registration failed. Please try again.");
+        showErrorModal(data.error || "Registration failed. Please try again.");
         return;
       }
-
       if (statusMsg) statusMsg.style.display = "block";
       showSuccessModal();
       membershipForm.reset();
 
     } catch (err) {
-      alert("Server error. Please try again.");
+      showErrorModal("Server error. Please try again.");
     }
   });
 }
@@ -189,6 +188,49 @@ function setupSuccessModal() {
       hideSuccessModal();
     }
   });
+}
+
+function setupErrorModal() {
+  const modal = document.getElementById("errorModal");
+  if (!modal) return;
+
+  const backdrop = modal.querySelector(".success-backdrop");
+  const closeBtn = document.getElementById("closeErrorModalBtn");
+
+  if (backdrop) {
+    backdrop.addEventListener("click", hideErrorModal);
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", hideErrorModal);
+  }
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && modal.classList.contains("show")) {
+      hideErrorModal();
+    }
+  });
+}
+
+function showErrorModal(message) {
+  const modal = document.getElementById("errorModal");
+  const msg = document.getElementById("errorModalMessage");
+
+  if (!modal || !msg) return;
+
+  msg.textContent = message || "Something went wrong. Please try again.";
+  modal.classList.add("show");
+  modal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
+}
+
+function hideErrorModal() {
+  const modal = document.getElementById("errorModal");
+  if (!modal) return;
+
+  modal.classList.remove("show");
+  modal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-open");
 }
 
 function showSuccessModal() {

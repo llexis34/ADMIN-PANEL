@@ -9,6 +9,13 @@ $user_id = require_login();
 // Accept multipart/form-data (photo + signature_file uploads)
 $form = $_POST;
 
+// Convert all string inputs to uppercase
+foreach ($form as $key => $value) {
+  if (is_string($value)) {
+    $form[$key] = strtoupper(trim($value));
+  }
+}
+
 // Always use session email
 $form["email"] = (string)($_SESSION["email"] ?? ($form["email"] ?? ""));
 

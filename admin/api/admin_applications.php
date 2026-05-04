@@ -120,12 +120,7 @@ try {
     // ── DELETE application ──────────────────────────────────
     if ($action === "delete") {
         require_post();
-
-        // Only full admin can delete
-        if ($admin["role"] !== "admin") {
-            echo json_encode(["ok" => false, "error" => "Insufficient permissions"]);
-            exit;
-        }
+        require_full_admin();
 
         $data = json_input();
         $id = (int) ($data["id"] ?? 0);
@@ -255,11 +250,33 @@ try {
         // Save branch as a dedicated column (not inside form_json)
         if (array_key_exists("_branch", $data)) {
             $allowed_branches = [
-                "ALFONSO","ATIMONAN","BALAYAN","CALAPAN","CALAUAG","CALATAGAN",
-                "CANDELARIA","CUENCA","GUMACA","LIPA","LUCENA","MAMBURAO",
-                "NAGCARLAN","NASUGBU","PAGSANJAN","PINAMALAYAN","ROSARIO","ROXAS",
-                "SAN JOSE","SAN JOSEMIN","SAN PABLO","SAN PASCUAL","SINILOAN",
-                "TAGKAWAYAN","TANAUAN","TAYABAS","TIAONG",
+                "ALFONSO",
+                "ATIMONAN",
+                "BALAYAN",
+                "CALAPAN",
+                "CALAUAG",
+                "CALATAGAN",
+                "CANDELARIA",
+                "CUENCA",
+                "GUMACA",
+                "LIPA",
+                "LUCENA",
+                "MAMBURAO",
+                "NAGCARLAN",
+                "NASUGBU",
+                "PAGSANJAN",
+                "PINAMALAYAN",
+                "ROSARIO",
+                "ROXAS",
+                "SAN JOSE",
+                "SAN JOSEMIN",
+                "SAN PABLO",
+                "SAN PASCUAL",
+                "SINILOAN",
+                "TAGKAWAYAN",
+                "TANAUAN",
+                "TAYABAS",
+                "TIAONG",
                 "" // allow clearing
             ];
             $branch = trim((string)$data["_branch"]);

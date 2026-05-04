@@ -4,7 +4,7 @@
 declare(strict_types=1);
 require __DIR__ . "/admin_db.php";
 
-require_full_admin();
+require_super_admin();
 $action = $_GET["action"] ?? "list";
 
 try {
@@ -29,7 +29,9 @@ try {
             exit;
         }
 
-        if (!in_array($role, ["admin","sub_admin"], true)) $role = "sub_admin";
+        if (!in_array($role, ["super_admin", "admin", "sub_admin"], true)) {
+            $role = "sub_admin";
+        }
 
         $hash = password_hash($password, PASSWORD_DEFAULT);
         $pdo->prepare("INSERT INTO admin_accounts (username, email, password_hash, role) VALUES (?,?,?,?)")
@@ -47,15 +49,28 @@ try {
         $username = trim($data["username"] ?? "");
         $email    = strtolower(trim($data["email"] ?? ""));
         $role     = $data["role"] ?? "sub_admin";
-        if (!in_array($role, ["admin","sub_admin"], true)) $role = "sub_admin";
+
+        if ($id <= 0 || $username === "" || $email === "") {
+            echo json_encode(["ok" => false, "error" => "ID, username, and email are required"]);
+            exit;
+        }
+
+        if (!in_array($role, ["super_admin", "admin", "sub_admin"], true)) {
+            $role = "sub_admin";
+        }
 
         $pdo->prepare("UPDATE admin_accounts SET username=?, email=?, role=? WHERE id=?")
             ->execute([$username, $email, $role, $id]);
 
-        // Change password if provided
-        if (!empty($data["password"]) && strlen($data["password"]) >= 8) {
+        if (!empty($data["password"])) {
+            if (strlen($data["password"]) < 8) {
+                echo json_encode(["ok" => false, "error" => "Password must be at least 8 characters"]);
+                exit;
+            }
+
             $hash = password_hash($data["password"], PASSWORD_DEFAULT);
-            $pdo->prepare("UPDATE admin_accounts SET password_hash=? WHERE id=?")->execute([$hash, $id]);
+            $pdo->prepare("UPDATE admin_accounts SET password_hash=? WHERE id=?")
+                ->execute([$hash, $id]);
         }
 
         echo json_encode(["ok" => true]);
@@ -97,7 +112,6 @@ try {
     }
 
     echo json_encode(["ok" => false, "error" => "Unknown action"]);
-
 } catch (Throwable $e) {
     http_response_code(500);
     echo json_encode(["ok" => false, "error" => "Server error"]);

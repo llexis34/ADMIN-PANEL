@@ -164,13 +164,42 @@
 </div>
 
 <script>
-  // If already logged in, redirect to dashboard
+  function clearAdminSessionStorage() {
+    sessionStorage.removeItem("admin_role");
+    sessionStorage.removeItem("admin_username");
+    sessionStorage.removeItem("admin_tab_token");
+  }
+
+  async function authFetch(url, options = {}) {
+    const token = sessionStorage.getItem("admin_tab_token") || "";
+    const headers = new Headers(options.headers || {});
+    if (token) headers.set("X-Admin-Tab-Token", token);
+
+    return fetch(url, {
+      ...options,
+      credentials: "include",
+      headers
+    });
+  }
+
+  // Redirect only when both the PHP session and this tab token still exist
   (async function () {
+    const token = sessionStorage.getItem("admin_tab_token");
+    if (!token) {
+      clearAdminSessionStorage();
+      return;
+    }
+
     try {
-      const r = await fetch("api/admin_me.php", { credentials: "include" });
+      const r = await authFetch("api/admin_me.php");
       const d = await r.json();
-      if (d.ok) window.location.href = "dashboard.html";
+      if (d.ok) {
+        window.location.href = "dashboard.html";
+        return;
+      }
     } catch (e) {}
+
+    clearAdminSessionStorage();
   })();
 
   document.getElementById("loginForm").addEventListener("submit", async function (e) {
@@ -200,6 +229,9 @@
       }
 
       ok.style.display = "block";
+      sessionStorage.setItem("admin_role", data.role || "");
+      sessionStorage.setItem("admin_username", data.name || data.username || "");
+      sessionStorage.setItem("admin_tab_token", data.tab_token || "");
       setTimeout(() => window.location.href = "dashboard.html", 600);
 
     } catch (ex) {

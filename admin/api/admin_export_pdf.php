@@ -96,10 +96,7 @@ $photo = "";
 if (!empty($row["photo_path"])) {
     $abs = __DIR__ . "/../../" . ltrim($row["photo_path"], "/");
     if (file_exists($abs)) {
-        $imgData = base64_encode(file_get_contents($abs));
-        $ext = strtolower(pathinfo($abs, PATHINFO_EXTENSION));
-        $mime = $ext === "png" ? "image/png" : (($ext === "webp") ? "image/webp" : "image/jpeg");
-        $photo = "<img src='data:{$mime};base64,{$imgData}' style='width:95px;height:95px;display:block;margin:0 auto;border:0;' />";
+        $photo = "<img src='{$abs}' style='width:95px;height:95px;display:block;margin:0 auto;border:0;' />";
     }
 }
 
@@ -108,10 +105,7 @@ $sigPath = $f["signature_file"] ?? $row["signature_path"] ?? "";
 if ($sigPath) {
     $absS = __DIR__ . "/../../" . ltrim($sigPath, "/");
     if (file_exists($absS)) {
-        $sData = base64_encode(file_get_contents($absS));
-        $sExt = strtolower(pathinfo($absS, PATHINFO_EXTENSION));
-        $sMime = $sExt === "png" ? "image/png" : (($sExt === "webp") ? "image/webp" : "image/jpeg");
-        $sigImg = "<img src='data:{$sMime};base64,{$sData}' style='max-width:140px;max-height:42px;display:inline-block;' />";
+        $sigImg = "<img src='{$absS}' style='max-width:140px;max-height:42px;display:inline-block;' />";
     }
 }
 
@@ -733,7 +727,7 @@ ob_start();
                             $imgD = base64_encode(file_get_contents($absC));
                             $imgM = $ext === "png" ? "image/png" : ($ext === "webp" ? "image/webp" : "image/jpeg");
                             ?>
-                            <img src="data:<?= $imgM ?>;base64,<?= $imgD ?>" style="max-width:150px;max-height:90px;" />
+                            <img src="<?= $absC ?>" style="max-width:150px;max-height:90px;" />
                         <?php elseif ($ext === "pdf"): ?>
                             [PDF File: <?= v(basename($cpath)) ?>]
                         <?php else: ?>
@@ -761,6 +755,9 @@ ob_start();
 $html = ob_get_clean();
 
 if ($mode === "pdf") {
+
+    ini_set('pcre.backtrack_limit', '5000000');
+
     $tempDir = __DIR__ . "/../../tmp/mpdf";
 
     if (!is_dir($tempDir)) {

@@ -38,11 +38,13 @@ try {
     $_SESSION["admin_id"]       = (int)$admin["id"];
     $_SESSION["admin_username"] = $admin["username"];
     $_SESSION["admin_role"]     = $admin["role"];
+    $_SESSION["admin_tab_token"] = bin2hex(random_bytes(32));
 
     echo json_encode([
-        "ok"   => true,
-        "role" => $admin["role"],
-        "name" => $admin["username"],
+        "ok"        => true,
+        "role"      => $admin["role"],
+        "name"      => $admin["username"],
+        "tab_token" => $_SESSION["admin_tab_token"],
     ]);
 } catch (Throwable $e) {
     http_response_code(500);

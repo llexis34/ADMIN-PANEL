@@ -114,6 +114,77 @@
         size: A4;
       }
     }
+
+    .export-dropdown-wrap {
+      position: relative;
+      display: inline-flex;
+    }
+
+    .export-dropdown-wrap .btn-success-main {
+      border-radius: 4px 0 0 4px;
+      background: #16a34a;
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .export-dropdown-wrap .btn-success-caret {
+      border-radius: 0 4px 4px 0;
+      background: #15803d;
+      color: #fff;
+      border: none;
+      border-left: 1px solid #15803d;
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      cursor: pointer;
+    }
+
+    .export-dropdown-menu {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 6px);
+      right: 0;
+      background: #fff;
+      border: 1px solid #dce4ed;
+      border-radius: 6px;
+      min-width: 220px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+      overflow: hidden;
+      z-index: 9999;
+    }
+
+    .export-dropdown-menu a,
+    .export-dropdown-menu button {
+      display: block;
+      width: 100%;
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      color: #222;
+      background: none;
+      border: none;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      cursor: pointer;
+      text-decoration: none;
+      font-family: Arial, sans-serif;
+    }
+
+    .export-dropdown-menu a:last-child,
+    .export-dropdown-menu button:last-child {
+      border-bottom: none;
+    }
+
+    .export-dropdown-menu a:hover,
+    .export-dropdown-menu button:hover {
+      background: #f5f8fc;
+    }
+
+    .export-dropdown-wrap.open .export-dropdown-menu {
+      display: block;
+    }
   </style>
 </head>
 
@@ -136,9 +207,8 @@
     <a href="dashboard.html"><span class="ico">&#9632;</span> Dashboard</a>
     <a href="applications.html" class="active"><span class="ico">&#128196;</span> Applications</a>
     <a href="users.html"><span class="ico">&#128100;</span> Users</a>
-    <div class="sidebar-section admin-only" style="display:none;">Admin</div>
-    <a href="subadmins.html" class="admin-only" style="display:none;"><span class="ico">&#128272;</span> Admin
-      Accounts</a>
+    <div class="sidebar-section admin-only">Admin</div>
+    <a href="subadmins.html" class="admin-only"><span class="ico">&#128272;</span> Admin Accounts</a>
     <div class="sidebar-section">Site</div>
     <a href="../index.html" target="_blank"><span class="ico">&#127760;</span>
       Main Site</a>
@@ -194,22 +264,26 @@
         <button class="modal-close" onclick="closeModal('viewModal')">&#x2715;</button>
       </div>
       <div class="modal-body" id="viewBody">Loading...</div>
-      <div class="modal-footer">
+      <div class="modal-footer" style="justify-content: space-between;">
         <button class="btn btn-secondary" onclick="closeModal('viewModal')">Close</button>
-        <button class="btn btn-primary"
-          onclick="window.open('api/admin_export_pdf.php?id=' + currentViewId + '&mode=print', '_blank')">Print
-        </button>
-        <button class="btn btn-success"
-          onclick="window.open('api/admin_export_pdf.php?id=' + currentViewId + '&mode=pdf', '_blank')">Export
-          as PDF
-        </button>
-        <button class="btn btn-success" onclick="exportSubscriptionPDF(currentViewId)">
-          Export Subscription Agreement
-        </button>
-
-        <button class="btn btn-success" onclick="exportKasunduanPDF(currentViewId)">
-          Export Kasunduan
-        </button>
+        <div style="display:flex; gap:8px; align-items:center;">
+          <button class="btn btn-primary"
+            onclick="window.open('api/admin_export_pdf.php?id=' + currentViewId + '&mode=print', '_blank')">
+            &#128438; Print
+          </button>
+          <div class="export-dropdown-wrap" id="exportDropWrap">
+            <button class="btn-success-main" onclick="toggleExportMenu()">Export</button>
+            <button class="btn-success-caret" onclick="toggleExportMenu()">&#9660;</button>
+            <div class="export-dropdown-menu">
+              <button
+                onclick="window.open('api/admin_export_pdf.php?id=' + currentViewId + '&mode=pdf', '_blank'); closeExportMenu()">&#128196;
+                Membership Form</button>
+              <button onclick="exportSubscriptionPDF(currentViewId); closeExportMenu()">&#128221; Subscription
+                Agreement</button>
+              <button onclick="exportKasunduanPDF(currentViewId); closeExportMenu()">&#128203; Kasunduan</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -261,6 +335,58 @@
   </div>
 
   <script>
+  (function () {
+    const role = sessionStorage.getItem("admin_role");
+    if (role === "super_admin") {
+      document.querySelectorAll(".admin-only").forEach(el => {
+        el.classList.add("show-admin-only");
+      });
+    }
+  })();
+</script>
+
+<script>
+  function getAdminTabToken() {
+    return sessionStorage.getItem("admin_tab_token") || "";
+  }
+
+  function clearAdminSessionStorage() {
+    sessionStorage.removeItem("admin_role");
+    sessionStorage.removeItem("admin_username");
+    sessionStorage.removeItem("admin_tab_token");
+  }
+
+  function goToAdminLogin() {
+    clearAdminSessionStorage();
+    window.location.href = "login.html";
+  }
+
+  async function authFetch(url, options = {}) {
+    const token = getAdminTabToken();
+    if (!token) {
+      goToAdminLogin();
+      throw new Error("Missing admin tab token");
+    }
+
+    const headers = new Headers(options.headers || {});
+    headers.set("X-Admin-Tab-Token", token);
+
+    const response = await fetch(url, {
+      ...options,
+      credentials: "include",
+      headers
+    });
+
+    if (response.status === 401) {
+      goToAdminLogin();
+      throw new Error("Admin session expired");
+    }
+
+    return response;
+  }
+</script>
+
+<script>
     let _confirmResolve = null;
 
     function showConfirm({ type, title, message, label }) {
@@ -336,7 +462,7 @@
     let currentViewId = 0; // ← ADD THIS LINE
 
     (async function init() {
-      const me = await (await fetch("api/admin_me.php", {
+      const me = await (await authFetch("api/admin_me.php", {
         credentials: "include"
       })).json();
       if (!me.ok) {
@@ -347,8 +473,10 @@
       currentRole = me.role;
       document.getElementById("adminName").textContent = me.username + " (" + me.role + ")";
 
-      if (me.role === "admin") {
-        document.querySelectorAll(".admin-only").forEach(el => el.style.display = "");
+      if (me.role === "super_admin") {
+        document.querySelectorAll(".admin-only").forEach(el => {
+          el.classList.add("show-admin-only");
+        });
       }
 
       // Check URL for ?view=ID
@@ -374,7 +502,7 @@
         exportBtn.href = "api/admin_export.php" + (status ? "?status=" + encodeURIComponent(status) : "");
       }
 
-      const r = await fetch(url, {
+      const r = await authFetch(url, {
         credentials: "include"
       });
       const data = await r.json();
@@ -399,7 +527,7 @@
          <button class="btn btn-info btn-sm" onclick="openView(${row.id})">View</button>
          <button class="btn btn-warning btn-sm" onclick="openStatus(${row.id}, '${row.status}')">Status</button>
          <button class="btn btn-primary btn-sm" onclick="openEdit(${row.id})">Edit</button>
-         ${currentRole === "admin" ? `<button class="btn btn-danger btn-sm" onclick="deleteApp(${row.id})">Delete</button>` : ""}
+         ${(currentRole === "admin" || currentRole === "super_admin") ? `<button class="btn btn-danger btn-sm" onclick="deleteApp(${row.id})">Delete</button>` : ""}
         </td>
       </tr>
     `).join("");
@@ -417,7 +545,7 @@
       openModal("viewModal");
       document.getElementById("viewBody").innerHTML = "Loading...";
 
-      const r = await fetch("api/admin_applications.php?action=view&id=" + id, { credentials: "include" });
+      const r = await authFetch("api/admin_applications.php?action=view&id=" + id, { credentials: "include" });
       const data = await r.json();
 
       if (!data.ok) {
@@ -600,7 +728,7 @@
       currentEditId = id;
       document.getElementById("editBody").innerHTML = "Loading...";
 
-      const r = await fetch("api/admin_applications.php?action=view&id=" + id, { credentials: "include" });
+      const r = await authFetch("api/admin_applications.php?action=view&id=" + id, { credentials: "include" });
       const data = await r.json();
 
       if (!data.ok) { document.getElementById("editBody").innerHTML = "<p style='color:red;'>Error.</p>"; return; }
@@ -835,7 +963,7 @@
     function closeModal(id) { document.getElementById(id).classList.remove("open"); }
 
     function post(url, body) {
-      return fetch(url, {
+      return authFetch(url, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -856,7 +984,9 @@
     async function adminLogout() {
       const ok = await showConfirm({ type: 'logout', title: 'Sign out?', message: 'You will be returned to the login page.', label: 'Sign out' });
       if (!ok) return;
-      await fetch("api/admin_logout.php", { method: "POST", credentials: "include" });
+      await authFetch("api/admin_logout.php", { method: "POST", credentials: "include" });
+      sessionStorage.removeItem("admin_role");
+      sessionStorage.removeItem("admin_username");
       window.location.href = "login.html";
     }
 
@@ -881,6 +1011,17 @@
         "_blank"
       );
     }
+
+    function toggleExportMenu() {
+      document.getElementById('exportDropWrap').classList.toggle('open');
+    }
+    function closeExportMenu() {
+      document.getElementById('exportDropWrap').classList.remove('open');
+    }
+    document.addEventListener('click', function (e) {
+      const wrap = document.getElementById('exportDropWrap');
+      if (wrap && !wrap.contains(e.target)) closeExportMenu();
+    });
   </script>
 
   <!-- CONFIRM MODAL -->

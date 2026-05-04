@@ -672,18 +672,6 @@ select.form-control {
   font-size: 13.5px;
   font-family: inherit;
   font-weight: 500;
-  background: transparent;
-  color: #555;
-  transition: background 0.15s, color 0.15s;
-}
-
-.overlay .modal .confirm-footer button {
-  padding: 14px;
-  border: none;
-  cursor: pointer;
-  font-size: 13.5px;
-  font-family: inherit;
-  font-weight: 500;
   color: #555;
   background: transparent;
   transition: background 0.15s, color 0.15s;
@@ -705,61 +693,182 @@ select.form-control {
 
 /* CANCEL */
 @keyframes cancelSlideOut {
-  0%   { transform: translateX(0) scale(1);       opacity: 1;   background: transparent; }
-  25%  { transform: translateX(-6px) scale(0.95); opacity: 0.9; background: #f0f0f0; }
-  60%  { transform: translateX(4px) scale(0.97);  opacity: 0.7; }
-  100% { transform: translateX(0) scale(1);       opacity: 1;   background: transparent; }
+  0% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    background: transparent;
+  }
+
+  25% {
+    transform: translateX(-6px) scale(0.95);
+    opacity: 0.9;
+    background: #f0f0f0;
+  }
+
+  60% {
+    transform: translateX(4px) scale(0.97);
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    background: transparent;
+  }
 }
+
 .overlay .modal .confirm-footer .btn-cancel.clicked {
   animation: cancelSlideOut 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 /* DELETE */
 @keyframes deleteShake {
-  0%   { transform: translateX(0) scale(1);       background: transparent; }
-  10%  { transform: translateX(-9px) scale(1.06); background: #fee2e2; }
-  25%  { transform: translateX(9px) scale(1.06);  background: #fee2e2; }
-  40%  { transform: translateX(-7px) scale(1.04); background: #fca5a5; }
-  55%  { transform: translateX(7px) scale(1.04);  background: #fca5a5; }
-  70%  { transform: translateX(-4px) scale(1.02); background: #fee2e2; }
-  85%  { transform: translateX(4px) scale(1.02);  background: #fee2e2; }
-  100% { transform: translateX(0) scale(1);       background: transparent; }
+  0% {
+    transform: translateX(0) scale(1);
+    background: transparent;
+  }
+
+  10% {
+    transform: translateX(-9px) scale(1.06);
+    background: #fee2e2;
+  }
+
+  25% {
+    transform: translateX(9px) scale(1.06);
+    background: #fee2e2;
+  }
+
+  40% {
+    transform: translateX(-7px) scale(1.04);
+    background: #fca5a5;
+  }
+
+  55% {
+    transform: translateX(7px) scale(1.04);
+    background: #fca5a5;
+  }
+
+  70% {
+    transform: translateX(-4px) scale(1.02);
+    background: #fee2e2;
+  }
+
+  85% {
+    transform: translateX(4px) scale(1.02);
+    background: #fee2e2;
+  }
+
+  100% {
+    transform: translateX(0) scale(1);
+    background: transparent;
+  }
 }
+
 .overlay .modal .confirm-footer .btn-ok.shake {
   animation: deleteShake 0.5s ease forwards;
 }
 
 /* DISABLE */
 @keyframes disableFlash {
-  0%   { transform: scale(1);    background: transparent; }
-  20%  { transform: scale(0.88); background: #fef3c7; }
-  50%  { transform: scale(1.07); background: #fde68a; }
-  75%  { transform: scale(0.96); background: #fef3c7; }
-  100% { transform: scale(1);    background: transparent; }
+  0% {
+    transform: scale(1);
+    background: transparent;
+  }
+
+  20% {
+    transform: scale(0.88);
+    background: #fef3c7;
+  }
+
+  50% {
+    transform: scale(1.07);
+    background: #fde68a;
+  }
+
+  75% {
+    transform: scale(0.96);
+    background: #fef3c7;
+  }
+
+  100% {
+    transform: scale(1);
+    background: transparent;
+  }
 }
+
 .overlay .modal .confirm-footer .btn-ok.flash-warn {
   animation: disableFlash 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 /* ACTIVATE */
 @keyframes activateBounce {
-  0%   { transform: scale(1) translateY(0);      background: transparent; }
-  20%  { transform: scale(0.9) translateY(4px);  background: #d1fae5; }
-  55%  { transform: scale(1.12) translateY(-8px); background: #6ee7b7; }
-  75%  { transform: scale(0.97) translateY(-2px); background: #d1fae5; }
-  100% { transform: scale(1) translateY(0);      background: transparent; }
+  0% {
+    transform: scale(1) translateY(0);
+    background: transparent;
+  }
+
+  20% {
+    transform: scale(0.9) translateY(4px);
+    background: #d1fae5;
+  }
+
+  55% {
+    transform: scale(1.12) translateY(-8px);
+    background: #6ee7b7;
+  }
+
+  75% {
+    transform: scale(0.97) translateY(-2px);
+    background: #d1fae5;
+  }
+
+  100% {
+    transform: scale(1) translateY(0);
+    background: transparent;
+  }
 }
+
 .overlay .modal .confirm-footer .btn-ok.bounce-up {
   animation: activateBounce 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 /* LOGOUT */
 @keyframes logoutSpin {
-  0%   { transform: scale(1) rotate(0deg);     background: transparent; }
-  30%  { transform: scale(0.85) rotate(-18deg); background: #dbeafe; }
-  65%  { transform: scale(1.08) rotate(8deg);  background: #bfdbfe; }
-  100% { transform: scale(1) rotate(0deg);     background: transparent; }
+  0% {
+    transform: scale(1) rotate(0deg);
+    background: transparent;
+  }
+
+  30% {
+    transform: scale(0.85) rotate(-18deg);
+    background: #dbeafe;
+  }
+
+  65% {
+    transform: scale(1.08) rotate(8deg);
+    background: #bfdbfe;
+  }
+
+  100% {
+    transform: scale(1) rotate(0deg);
+    background: transparent;
+  }
 }
+
 .overlay .modal .confirm-footer .btn-ok.spin-out {
   animation: logoutSpin 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Hide admin-only by default */
+.admin-only {
+  display: none !important;
+}
+
+/* Show only for super admin */
+.sidebar-section.admin-only.show-admin-only {
+  display: block !important;
+}
+
+.sidebar a.admin-only.show-admin-only {
+  display: flex !important;
 }

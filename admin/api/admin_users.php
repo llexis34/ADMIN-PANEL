@@ -73,8 +73,35 @@ try {
         exit;
     }
 
-    echo json_encode(["ok" => false, "error" => "Unknown action"]);
+    // ── EDIT user ─────────────────────────────────────────
+    if ($action === "edit") {
+        require_post();
+        require_full_admin();
 
+        $data = json_input();
+
+        $id = (int)($data["id"] ?? 0);
+        $first = trim($data["first_name"] ?? "");
+        $last = trim($data["last_name"] ?? "");
+        $email = trim($data["email"] ?? "");
+        $phone = trim($data["phone"] ?? "");
+
+        if (!$id) {
+            echo json_encode(["ok" => false, "error" => "Invalid ID"]);
+            exit;
+        }
+
+        $sql = "UPDATE users 
+            SET first_name=?, last_name=?, email=?, phone=? 
+            WHERE id=?";
+        $pdo->prepare($sql)->execute([$first, $last, $email, $phone, $id]);
+
+        echo json_encode(["ok" => true]);
+        exit;
+    }
+
+    echo json_encode(["ok" => false, "error" => "Unknown action"]);
+    
 } catch (Throwable $e) {
     http_response_code(500);
     echo json_encode(["ok" => false, "error" => "Server error"]);

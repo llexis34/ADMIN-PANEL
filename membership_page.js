@@ -23,6 +23,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     initPage(userEmail);
+
+    document.querySelectorAll("input[type='text'], textarea").forEach(input => {
+      input.addEventListener("input", function () {
+        this.value = this.value.toUpperCase();
+      });
+    });
   })();
 });
 
