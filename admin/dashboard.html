@@ -61,6 +61,15 @@
         <div class="stat-num" id="s-active">—</div>
         <div class="stat-label">Active Users</div>
       </div>
+      <div class="stat-box">
+      <div class="stat-num" id="s-daily">—</div>
+      <div class="stat-label">Daily Logins</div>
+    </div>
+
+    <div class="stat-box">
+      <div class="stat-num" id="s-monthly">—</div>
+      <div class="stat-label">Monthly Logins</div>
+    </div>
 
     </div> <!-- closes stats-grid -->
 
@@ -242,6 +251,9 @@
       document.getElementById("s-incomplete").textContent = data.stats.incomplete ?? "—";
       document.getElementById("s-approved").textContent = data.stats.approved ?? "—";
       document.getElementById("s-active").textContent = data.stats.active ?? "—";
+
+      document.getElementById("s-daily").textContent = data.stats.daily_logins ?? "—";
+      document.getElementById("s-monthly").textContent = data.stats.monthly_logins ?? "—";
 
       const tbody = document.getElementById("recentTbody");
       if (!data.recent.length) {
